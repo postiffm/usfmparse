@@ -1,0 +1,11 @@
+# Configuration file to tell pip how to bild/install the usfmtools package
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "usfmtools"
+version = "0.1.0"
+
+[project.scripts]
+usfmToAccordance = "usfmtools.usfmToAccordance:main"

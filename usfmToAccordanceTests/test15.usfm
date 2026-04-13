@@ -1,0 +1,4 @@
+\rem Check footnote in an \add marker
+\id PHP
+\c 3
+\v 2 Beware of the \add \f + \ft Here the apostle uses word play.\f*false\add* circumcision!
