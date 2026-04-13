@@ -15,10 +15,10 @@ A clean, modular USFM (Unified Standard Format Markers) parser following a three
 No external dependencies required beyond Python 3.7+ standard library (except `click` for CLI).
 
 ```bash
-# Install click for CLI usage
-pip install click
-
-# Or use the modules programmatically without any dependencies
+# Install dependency click for CLI usage and set up to be an editable module
+python3 -m venv .usfmparse
+source .usfmparse/bin/activate
+pip install -r requirements.txt 
 ```
 
 ## Command-Line Usage

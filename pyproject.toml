@@ -9,3 +9,6 @@ version = "0.1.0"
 
 [project.scripts]
 usfmToAccordance = "usfmtools.usfmToAccordance:main"
+
+[tool.setuptools.packages.find]
+include = ["usfmtools*"]
