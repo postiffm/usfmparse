@@ -66,7 +66,8 @@ class Heading(UsfmNode):
 
 @dataclass
 class Footnote(UsfmNode):
-    """Footnote content (usually discarded by walkers)."""
+    """Footnote content (often discarded by "simplifying" walkers)."""
+    caller: str # +, -, ?=char
     # fr, ft, fk content
     children: List[UsfmNode] = field(default_factory=list)
 
@@ -399,13 +400,13 @@ class UsfmParser:
         elif token.type == TOKEN_MARKER:
             marker = token.value
 
-            if marker == 'w':
+            if marker == 'w' or marker == '+w':
                 return self._parse_glossary_word()
             elif marker == 'f':
                 return self._parse_footnote()
             elif marker == 'x':
                 return self._parse_crossref()
-            elif marker in ('nd', 'add', 'qt', 'tl', 'rq', 'k', '+w'):
+            elif marker in ('nd', 'add', 'qt', 'tl', 'rq', 'k'):
                 return self._parse_inline_span()
             else:
                 # Unknown inline marker
@@ -441,7 +442,7 @@ class UsfmParser:
         content_parts = []
         while self._current_token():
             token = self._current_token()
-            if token.type == TOKEN_MARKER_END and token.value == 'w':
+            if token.type == TOKEN_MARKER_END and (token.value == 'w' or token.value == '+w'):
                 self._advance()  # Consume \\w*
                 break
             if token.type == TOKEN_TEXT:
@@ -466,7 +467,10 @@ class UsfmParser:
         # Consume \\f marker
         self._advance()
 
-        footnote = Footnote()
+        # Get footnote caller +, -, or ?=char (required - will raise exception if missing)
+        caller = self._expect_text("Missing caller after \\f")
+
+        footnote = Footnote(caller)
 
         # Collect content until \\f*
         while self._current_token():
@@ -519,12 +523,35 @@ class UsfmParser:
         # Collect content until matching end marker
         while self._current_token():
             token = self._current_token()
+
             if token.type == TOKEN_MARKER_END and token.value == marker:
                 self._advance()  # Consume end marker
                 break
 
-            if token.type == TOKEN_TEXT:
+            elif token.type == TOKEN_TEXT:
                 span.children.append(Text(value=self._advance().value))
+
+            elif token.type == TOKEN_MARKER:
+                marker = token.value
+                line = token.line if token else 'EOF'
+                # MAP: The following is very similar to code in parse_inline_content and is candidate for refactoring
+                if marker == 'w' or marker == "+w":
+                    return self._parse_glossary_word()
+                elif marker == 'f':
+                    # Technically footnotes are not supposed to be inside of \add statements, for example
+                    # but we are being lenient.
+                    return self._parse_footnote()
+                elif marker == 'x':
+                    raise ValueError(f"Unexpected {marker} in {self.filename}:{line}")
+                    #return self._parse_crossref()
+                elif marker in ('nd', 'add', 'qt', 'tl', 'rq', 'k'):
+                    raise ValueError(f"Unexpected {marker} in {self.filename}:{line}")
+                    #return self._parse_inline_span()
+                else:
+                    # Unknown inline marker
+                    self._advance()
+                    return Unknown(marker=marker)
+
             else:
                 self._advance()
 

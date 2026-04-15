@@ -63,18 +63,23 @@ class UsfmWalker:
 
     def visit_footnote(self, node: Footnote) -> str:
         """Render footnote node - default: discard."""
+        #print(''.join(self.render(child) for child in node.children))
         return ''
 
     def visit_crossref(self, node: CrossRef) -> str:
         """Render cross-reference node - default: discard."""
+        #print(''.join(self.render(child) for child in node.children))
         return ''
 
     def visit_glossaryword(self, node: GlossaryWord) -> str:
         """Render glossary word - default: emit word only."""
+        #print(''.join(self.render(child) for child in node.children))
         return node.word
 
     def visit_inlinespan(self, node: InlineSpan) -> str:
         """Render inline span - default: emit children."""
+        #print(''.join(self.render(child) for child in node.children))
+        # MAP: Depending on what the the derived class wants, the above may be inappropriate.
         return ''.join(self.render(child) for child in node.children)
 
     def visit_text(self, node: Text) -> str:
@@ -90,6 +95,7 @@ class UsfmWalker:
 
     def visit_unknown(self, node: Unknown) -> str:
         """Render Unknown AST node."""
+        print(f"Warning: Unknown {node.__class__.__name__}", file=sys.stderr)
         return ''.join(self.render(child) for child in node.children)
 
 
@@ -231,6 +237,8 @@ class AccordanceWalker(UsfmWalker):
         if text and text[0] in '.,:;!?':
             return text  # No leading space
 
+        # Bug in test14.usfm where opening " has a space after it. Should not.
+
         # Normal text gets a leading space for word separation
         return ' ' + text
 
@@ -240,6 +248,22 @@ class AccordanceWalker(UsfmWalker):
         if node.word and node.word[0] in '.,:;!?':
             return node.word
         return ' ' + node.word
+    
+    def visit_inlinespan(self, node: InlineSpan) -> str:
+        """Render inline span, skipping any footnote or crossref children."""
+        # test15.usfm has this example:
+        # \add \f + \ft Here the apostle uses word play.\f*false\add* where
+        # the + Here the apostle... was printed as part of the text. Only
+        # the "add" thing - "false" - should be printed. Watch for 
+        # this going too far in other inlinespan items.
+        parts = []
+        for child in node.children:
+            #print("CHILD: " + self.render(child))
+            if isinstance(child, (Footnote, CrossRef)):
+                print("Skipping: " + self.render(child))
+                continue  # drop footnotes/crossrefs inside spans
+            parts.append(self.render(child))
+        return ''.join(parts)
 
 
 # ============================================================================
@@ -274,6 +298,15 @@ class SimplifyWalker(UsfmWalker):
         if node.word and node.word[0] in '.,:;!?':
             return node.word
         return ' ' + node.word
+
+    def visit_inlinespan(self, node: InlineSpan) -> str:
+        """Render inline span, skipping footnotes and crossrefs."""
+        parts = []
+        for child in node.children:
+            if isinstance(child, (Footnote, CrossRef)):
+                continue
+            parts.append(self.render(child))
+        return ''.join(parts)
 
 
 # ============================================================================
