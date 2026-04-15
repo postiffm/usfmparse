@@ -2,6 +2,9 @@
 
 # Run some test files and produce output to compare to known good
 
+# Remember to start the Python environment
+# with source ../usfmparse/bin/activate
+
 rm -rf *.tmp
 
 #SCRIPT='python3 ../usfmToAccordance.py'
@@ -40,7 +43,6 @@ $SCRIPT test12.usfm > test12.tmp
 diff test12.acc test12.tmp
 $SCRIPT test13.usfm > test13.tmp
 diff test13.acc test13.tmp
-
 $SCRIPT test14.usfm > test14.tmp
 diff test14.acc test14.tmp
 $SCRIPT test15.usfm > test15.tmp

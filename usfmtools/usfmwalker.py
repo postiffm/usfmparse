@@ -151,6 +151,7 @@ class AccordanceWalker(UsfmWalker):
         self.pending_paragraph = False
         self.current_book = None
         self.current_chapter = None
+        self.suppressNextSpace = False
 
     def visit_book(self, node: Book) -> str:
         """Render book - skip if in SKIPPED_BOOKS."""
@@ -183,6 +184,10 @@ class AccordanceWalker(UsfmWalker):
         # Format: "Book Chapter:Verse text..."
         # First verse has no leading newline to avoid blank line at start
         # of file
+
+        # Space suppression after 'stray' double quotation marks does not carry over verse boundaries.
+        self.suppressNextSpace = False
+        
         prefix = '' if self.first_verse else '\n'
         self.first_verse = False
 
@@ -237,10 +242,18 @@ class AccordanceWalker(UsfmWalker):
         if text and text[0] in '.,:;!?':
             return text  # No leading space
 
-        # Bug in test14.usfm where opening " has a space after it. Should not.
+        if (self.suppressNextSpace == True):
+            retval = text
+            self.suppressNextSpace = False
+        else:
+            # Normal text gets a leading space for word separation
+            retval = ' ' + text
 
-        # Normal text gets a leading space for word separation
-        return ' ' + text
+        # Bug in test14.usfm where opening " as a token by itself has a space after it. Should not.
+        if text and text == "\"":
+            self.suppressNextSpace = True
+
+        return retval
 
     def visit_glossaryword(self, node: GlossaryWord) -> str:
         """Render glossary word with leading space."""
