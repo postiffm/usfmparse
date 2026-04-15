@@ -3,7 +3,7 @@
 # Run some test files and produce output to compare to known good
 
 # Remember to start the Python environment
-# with source ../usfmparse/bin/activate
+# with source ../.usfmparse/bin/activate
 
 rm -rf *.tmp
 
