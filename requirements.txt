@@ -1,3 +1,7 @@
 click==8.3.2
-# Editable install with no version control (usfmtools==0.1.0)
--e /home/postiffm/Dropbox/AndroidApps/usfmparse
+iniconfig==2.3.0
+packaging==26.1
+pluggy==1.6.0
+Pygments==2.20.0
+pytest==9.0.3
+-e git+ssh://git@github.com/postiffm/usfmparse@da84011ad362b5c12fbbb5ce2b825af0ebdf53c1#egg=usfmtools
