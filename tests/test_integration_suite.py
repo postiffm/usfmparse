@@ -3,7 +3,7 @@ Integration tests for USFM parser using pre-existing test files.
 
 This test suite validates the new implementation against the reference
 test files (test1.usfm through test12.usfm) and their expected outputs
-(test1.acc through test12.acc).
+(test1.acc through test16.acc).
 
 Tests 5 and 6 are expected to fail with errors (missing verse numbers).
 """
@@ -15,7 +15,7 @@ from usfmtools.usfmwalker import AccordanceWalker
 
 
 # Base directory for test files (workspace root)
-TEST_DIR = Path(__file__).parent.parent
+TEST_DIR = Path(__file__).parent.parent / "usfmToAccordanceTests"
 
 
 def normalize_output(content: str) -> str:
@@ -57,7 +57,13 @@ def parse_and_render(test_num: int, para: bool = True, tc: bool = True) -> str:
 
 class TestIntegrationSuite:
     """Integration tests against pre-existing test files."""
-    
+
+    def test_test0_empty(self):
+        """Test 10: USFM with only \rem comments, otherwise empty."""
+        actual = parse_and_render(0)
+        expected = read_expected_output(0)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+
     def test_test1_glossary_word(self):
         """Test 1: Glossary word with pipe delimiter."""
         actual = parse_and_render(1)
@@ -144,6 +150,26 @@ class TestIntegrationSuite:
         expected = read_expected_output(12)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
+    def test_test13_features(self):
+        """Test 13: Additional USFM features."""
+        actual = parse_and_render(13)
+        expected = read_expected_output(13)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test14_space_after_open_quote(self):
+        """Test 14: Output was putting space after open quotation mark."""
+        actual = parse_and_render(14)
+        expected = read_expected_output(14)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test15_footnoteplustext(self):
+        """Test 15: Footnote text should not become part of verse text."""
+        actual = parse_and_render(15)
+        expected = read_expected_output(15)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test16_paragraph_in_verse(self):
+        """Test 16: Paragraph in middle of verse."""
+        actual = parse_and_render(16)
+        expected = read_expected_output(16)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""

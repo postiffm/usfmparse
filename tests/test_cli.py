@@ -339,22 +339,33 @@ class TestErrorHandling:
 class TestRealWorldFiles:
     """Test with actual test files if they exist"""
     
-    @pytest.mark.skipif(not Path("test1.usfm").exists(), 
+    @pytest.mark.skipif(not Path("usfmToAccordanceTests/test0.usfm").exists(), 
+                       reason="test0.usfm not found")
+    def test_test0_file(self):
+        """Test with actual test0.usfm file"""
+        stdout, stderr, returncode = run_cli(["usfmToAccordanceTests/test0.usfm"])
+        
+        assert returncode == 0
+        # test0.usfm is a fragment without book/chapter/verse structure
+        # so output should be empty
+        assert stdout == ""
+
+    @pytest.mark.skipif(not Path("usfmToAccordanceTests/test1.usfm").exists(), 
                        reason="test1.usfm not found")
     def test_test1_file(self):
         """Test with actual test1.usfm file"""
-        stdout, stderr, returncode = run_cli(["test1.usfm"])
+        stdout, stderr, returncode = run_cli(["usfmToAccordanceTests/test1.usfm"])
         
         assert returncode == 0
         # test1.usfm is a fragment without book/chapter/verse structure
         # so output should be empty
-        assert stdout == ""
+        assert stdout == "Ezek. 19:1 dem Messias,"
     
-    @pytest.mark.skipif(not Path("test3.usfm").exists(),
+    @pytest.mark.skipif(not Path("usfmToAccordanceTests/test3.usfm").exists(),
                        reason="test3.usfm not found")
     def test_test3_file(self):
         """Test with actual test3.usfm file"""
-        stdout, stderr, returncode = run_cli(["test3.usfm"])
+        stdout, stderr, returncode = run_cli(["usfmToAccordanceTests/test3.usfm"])
         
         assert returncode == 0
         assert "Heb. 1:3" in stdout
