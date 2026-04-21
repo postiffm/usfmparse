@@ -170,6 +170,42 @@ class TestIntegrationSuite:
         actual = parse_and_render(16)
         expected = read_expected_output(16)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test16_paragraph_in_verse(self):
+        """Test 16: Paragraph in middle of verse."""
+        actual = parse_and_render(16)
+        expected = read_expected_output(16)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test17_space_after_open_quote(self):
+        """Test 17: Space after open quote."""
+        actual = parse_and_render(17)
+        expected = read_expected_output(17)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test18_parenthesis_spacing(self):
+        """Test 18: Parenthesis spacing."""
+        actual = parse_and_render(18)
+        expected = read_expected_output(18)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test19_space_before_closing_single_quote(self):
+        """Test 19: Space before closing single quote."""
+        actual = parse_and_render(19)
+        expected = read_expected_output(19)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test20_space_after_long_dash(self):
+        """Test 20: Space after long dash."""
+        actual = parse_and_render(20)
+        expected = read_expected_output(20)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test21_space_before_double_quote_after_addmarker(self):
+        """Test 21: Space before double quote after addmarker."""
+        actual = parse_and_render(21)
+        expected = read_expected_output(21)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test22_missing_chapter_marker(self):
+        """Test 22: Missing chapter marker."""
+        actual = parse_and_render(22)
+        expected = read_expected_output(22)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""

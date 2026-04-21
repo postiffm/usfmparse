@@ -50,3 +50,16 @@ diff test15.acc test15.tmp
 $SCRIPT test16.usfm > test16.tmp
 diff test16.acc test16.tmp
 
+$SCRIPT test17.usfm > test17.tmp
+diff test17.acc test17.tmp
+$SCRIPT test18.usfm > test18.tmp
+diff test18.acc test18.tmp
+$SCRIPT test19.usfm > test19.tmp
+diff test19.acc test19.tmp
+$SCRIPT test20.usfm > test20.tmp
+diff test20.acc test20.tmp
+$SCRIPT test21.usfm > test21.tmp
+diff test21.acc test21.tmp
+$SCRIPT test22.usfm > test22.tmp
+diff test22.acc test22.tmp
+

@@ -1,0 +1,3 @@
+\rem Found if I have no \c marker, output is empty, no error msg!
+\id JOH
+\v 1 Hello

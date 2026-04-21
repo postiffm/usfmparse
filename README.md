@@ -299,3 +299,19 @@ Contributions are welcome! Please ensure all tests pass before submitting pull r
 ## Documentation
 
 For detailed design documentation, see `.kiro/specs/usfm-parser-refactor/design.md`.
+
+## Guidance for bug fixes for Antigravity
+### Bug 1
+In the usfmparser.py, there is a bug exposed in test_integration_suite.py::test_test16_paragraph_in_verse. What is happening is that the paragraph marker \p is not handled correctly when it is inside a verse (\v marker). Instead, the paragraph marker is "postponed" and printed at the beginning of the next verse, which is an error. 
+
+A possible solution si that the verse container should be able to hold  paragraph markers in addition to all the other content that it can hold. Also, if a paragraph marker is between two verses (right before a \v marker) then the chapter container should be able to hold it as well. Can you suggest a fix for this problem while keeping all the other tests working?
+
+One clue that might help solve this problem is that there is a lookahead hack around usfmparser.py:341. I am thinking that this should not be necessary.
+
+### Bug 2
+In the usfmwalker, there are two more little bugs in test17.usfm and test18.usfm which result in extra spaces either after an opening double quotation mark or before a closing parenthesis. These two failing tests are also integrated into test_integration_suite.py. Can you find the cause of this and fix it while keeping all the other tests working?
+
+### Bug 3
+In the usfmwalker, there are three more spacing bugs exposed by test19.usfm, test20.usfm, and test21.usfm which result in extra spaces in the output. These bugs are related to the presence of inline \add markers. These failing tests are integrated into test_integration_suite.py. A potential Can you find the cause of this and suggestion a fix while keeping all the other tests working?
+
+The fourth bug in test21.usfm is a shortcoming in error reporting. test21.usfm is missing a chapter number, which is required. But the output is empty. Instead, it should indicate the error about the missing chapter number to alert the user to fix the input.
