@@ -248,7 +248,7 @@ class AccordanceWalker(UsfmWalker):
 
         # Apply punctuation spacing rule: no space before punctuation
         # This handles cases where punctuation appears as a separate token
-        if text and text[0] in '.,:;!?':
+        if text and text[0] in '.,:;!?)]}”’':
             return text  # No leading space
 
         if (self.suppressNextSpace == True):
@@ -259,7 +259,7 @@ class AccordanceWalker(UsfmWalker):
             retval = ' ' + text
 
         # Bug in test14.usfm where opening " as a token by itself has a space after it. Should not.
-        if text and text == "\"":
+        if text and text in ("\"", "“", "‘", "(", "[", "{"):
             self.suppressNextSpace = True
 
         return retval
@@ -300,19 +300,30 @@ class SimplifyWalker(UsfmWalker):
 
     def __init__(self):
         """Initialize simplify walker."""
-        pass
+        self.suppressNextSpace = False
 
     def visit_verse(self, node: Verse) -> str:
         """Render verse content without reference."""
+        self.suppressNextSpace = False
         content = ''.join(self.render(child) for child in node.children)
         return content
 
     def visit_text(self, node: Text) -> str:
         """Render text with punctuation spacing rules."""
         text = node.value
-        if text and text[0] in '.,:;!?':
+        if text and text[0] in '.,:;!?)]}”’':
             return text
-        return ' ' + text
+        
+        if (getattr(self, 'suppressNextSpace', False)):
+            retval = text
+            self.suppressNextSpace = False
+        else:
+            retval = ' ' + text
+            
+        if text and text in ("\"", "“", "‘", "(", "[", "{"):
+            self.suppressNextSpace = True
+            
+        return retval
 
     def visit_glossaryword(self, node: GlossaryWord) -> str:
         """Render glossary word with leading space."""
