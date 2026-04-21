@@ -316,3 +316,9 @@ In the usfmwalker, there are three more spacing bugs exposed by usfmToAccordance
 
 ### Bug 4
 The fourth bug in usfmToAccordanceTests/test21.usfm is a shortcoming in error reporting. test21.usfm is missing a chapter number, which is required. But the output is empty. Instead, it should indicate the error about the missing chapter number to alert the user to fix the input.
+
+Trajectory ID: f4697f28-c2bf-421b-b908-fc737180a19b
+Error: HTTP 500 Internal Server Error
+Sherlog: 
+TraceID: 0xd97cf837ad1458fe
+Headers: {"Alt-Svc":["h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"],"Content-Length":["109"],"Content-Type":["text/event-stream"],"Date":["Tue, 21 Apr 2026 18:22:41 GMT"],"Server":["ESF"],"Server-Timing":["gfet4t7; dur=38076"],"Vary":["Origin","X-Origin","Referer"],"X-Cloudaicompanion-Trace-Id":["d97cf837ad1458fe"],"X-Content-Type-Options":["nosniff"],"X-Frame-Options":["SAMEORIGIN"],"X-Xss-Protection":["0"]}
