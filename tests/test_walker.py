@@ -238,7 +238,7 @@ class TestAccordanceWalkerFootnoteAndCrossRef:
                 Chapter(number='1', children=[
                     Verse(number='1', children=[
                         Text(value='before'),
-                        Footnote(children=[
+                        Footnote(caller='+', children=[
                             Text(value='footnote'),
                             Text(value='content')
                         ]),
@@ -286,7 +286,7 @@ class TestAccordanceWalkerFootnoteAndCrossRef:
                 Chapter(number='1', children=[
                     Verse(number='1', children=[
                         Text(value='text'),
-                        Footnote(children=[Text(value='fn1')]),
+                        Footnote(caller='+', children=[Text(value='fn1')]),
                         Text(value='more'),
                         CrossRef(children=[Text(value='xr1')]),
                         Text(value='end')
@@ -717,7 +717,7 @@ class TestSimplifyWalkerFiltering:
                 Chapter(number='1', children=[
                     Verse(number='1', children=[
                         Text(value='before'),
-                        Footnote(children=[
+                        Footnote(caller='+', children=[
                             Text(value='footnote'),
                             Text(value='content')
                         ]),
@@ -785,7 +785,7 @@ class TestSimplifyWalkerFiltering:
                 Chapter(number='1', children=[
                     Verse(number='1', children=[
                         Text(value='text'),
-                        Footnote(children=[Text(value='fn1')]),
+                        Footnote(caller='+', children=[Text(value='fn1')]),
                         Text(value='more'),
                         CrossRef(children=[Text(value='xr1')]),
                         Text(value='end')
