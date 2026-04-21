@@ -309,9 +309,10 @@ A possible solution si that the verse container should be able to hold  paragrap
 One clue that might help solve this problem is that there is a lookahead hack around usfmparser.py:341. I am thinking that this should not be necessary.
 
 ### Bug 2
-In the usfmwalker, there are two more little bugs in test17.usfm and test18.usfm which result in extra spaces either after an opening double quotation mark or before a closing parenthesis. These two failing tests are also integrated into test_integration_suite.py. Can you find the cause of this and fix it while keeping all the other tests working?
+In the usfmwalker, there are two more little bugs in usfmToAccordanceTests/test17.usfm and usfmToAccordanceTests/test18.usfm which result in extra spaces either after an opening double quotation mark or before a closing parenthesis. These two failing tests are also integrated into test_integration_suite.py. Can you find the cause of this and fix it while keeping all the other tests working?
 
 ### Bug 3
-In the usfmwalker, there are three more spacing bugs exposed by test19.usfm, test20.usfm, and test21.usfm which result in extra spaces in the output. These bugs are related to the presence of inline \add markers. These failing tests are integrated into test_integration_suite.py. A potential Can you find the cause of this and suggestion a fix while keeping all the other tests working?
+In the usfmwalker, there are three more spacing bugs exposed by usfmToAccordanceTests/test19.usfm, usfmToAccordanceTests/test20.usfm, and usfmToAccordanceTests/test21.usfm which result in extra spaces in the output. These bugs are related to the presence of inline \add markers in the usfm inputs. The failing tests are integrated into the pytest tests in tests/test_integration_suite.py. Can you find the cause of this and suggestion a fix while keeping all the other tests working?
 
-The fourth bug in test21.usfm is a shortcoming in error reporting. test21.usfm is missing a chapter number, which is required. But the output is empty. Instead, it should indicate the error about the missing chapter number to alert the user to fix the input.
+### Bug 4
+The fourth bug in usfmToAccordanceTests/test21.usfm is a shortcoming in error reporting. test21.usfm is missing a chapter number, which is required. But the output is empty. Instead, it should indicate the error about the missing chapter number to alert the user to fix the input.
