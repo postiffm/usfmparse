@@ -355,10 +355,11 @@ class UsfmParser:
                         # Stop here so the paragraph marker is available
                         # for the next verse
                         break
-                # Not followed by verse marker, so it's just formatting
-                # within this verse. Skip it and continue collecting
+                # Not followed by verse marker, so it's formatting
+                # within this verse. Parse it and continue collecting
                 # verse content
-                self._advance()
+                para = self._parse_paragraph()
+                verse.children.append(para)
                 continue
 
             # Parse inline content (text, glossary words, footnotes, etc.)

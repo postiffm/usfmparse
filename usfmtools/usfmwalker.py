@@ -152,6 +152,7 @@ class AccordanceWalker(UsfmWalker):
         self.current_book = None
         self.current_chapter = None
         self.suppressNextSpace = False
+        self.in_verse = False
 
     def visit_book(self, node: Book) -> str:
         """Render book - skip if in SKIPPED_BOOKS."""
@@ -202,12 +203,20 @@ class AccordanceWalker(UsfmWalker):
         para_marker = ' ¶' if (self.pending_paragraph and self.para) else ''
         self.pending_paragraph = False  # Reset flag after use
 
+        self.in_verse = True
         # Render verse content (text, glossary words, etc.)
         content = ''.join(self.render(child) for child in node.children)
+        self.in_verse = False
         return f"{prefix}{reference}{para_marker}{content}"
 
     def visit_paragraph(self, node: Paragraph) -> str:
         """Mark that next verse should have paragraph marker."""
+        if node.marker != 'p':
+            return ''
+        if getattr(self, 'in_verse', False):
+            if self.para:
+                return ' ¶'
+            return ''
         self.pending_paragraph = True
         return ''.join(self.render(child) for child in node.children)
 
@@ -338,6 +347,7 @@ class ParagraphExtractWalker(UsfmWalker):
         self.current_book = None
         self.current_chapter = None
         self.pending_paragraph = False
+        self.in_verse = False
 
     def extract(self, node: Document) -> dict:
         """
@@ -364,7 +374,8 @@ class ParagraphExtractWalker(UsfmWalker):
 
     def visit_paragraph(self, node: Paragraph) -> str:
         """Mark pending paragraph."""
-        self.pending_paragraph = True
+        if not getattr(self, 'in_verse', False):
+            self.pending_paragraph = True
         return super().visit_paragraph(node)
 
     def visit_verse(self, node: Verse) -> str:
@@ -373,7 +384,10 @@ class ParagraphExtractWalker(UsfmWalker):
             ref = f"{self.current_book} {self.current_chapter}:{node.number}"
             self.paragraph_map[ref] = True
             self.pending_paragraph = False
-        return super().visit_verse(node)
+        self.in_verse = True
+        result = super().visit_verse(node)
+        self.in_verse = False
+        return result
 
 
 
