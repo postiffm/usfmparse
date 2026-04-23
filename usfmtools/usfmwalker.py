@@ -152,6 +152,7 @@ class AccordanceWalker(UsfmWalker):
         self.current_book = None
         self.current_chapter = None
         self.suppressNextSpace = False
+        self.after_inline_span = False
         self.in_verse = False
 
     def visit_book(self, node: Book) -> str:
@@ -188,6 +189,7 @@ class AccordanceWalker(UsfmWalker):
 
         # Space suppression after 'stray' double quotation marks does not carry over verse boundaries.
         self.suppressNextSpace = False
+        self.after_inline_span = False
         
         prefix = '' if self.first_verse else '\n'
         self.first_verse = False
@@ -249,7 +251,20 @@ class AccordanceWalker(UsfmWalker):
         # Apply punctuation spacing rule: no space before punctuation
         # This handles cases where punctuation appears as a separate token
         if text and text[0] in '.,:;!?)]}”’':
+            self.after_inline_span = False
             return text  # No leading space
+
+        # After an inline span (e.g. \add...\add*), the space between the
+        # closing marker and the next text is a USFM markup artifact, not
+        # content. Suppress the leading space when the next text is closing
+        # punctuation (ASCII quote followed by non-alpha, or standalone ASCII
+        # quote). This distinguishes closing quotes from opening quotes like
+        # 'Whoever in test14.
+        if self.after_inline_span and text:
+            if text[0] in ('"', "'") and (len(text) == 1 or not text[1].isalpha()):
+                self.after_inline_span = False
+                return text  # No leading space for closing punctuation after inline span
+        self.after_inline_span = False
 
         if (self.suppressNextSpace == True):
             retval = text
@@ -259,7 +274,12 @@ class AccordanceWalker(UsfmWalker):
             retval = ' ' + text
 
         # Bug in test14.usfm where opening " as a token by itself has a space after it. Should not.
-        if text and text in ("\"", "“", "‘", "(", "[", "{"):
+        # \u201c is left double quote; 2018 is left single quote
+        if text and text in ("\"", "\u201c", "\u2018", "(", "[", "{"):
+            self.suppressNextSpace = True
+
+        # Em-dash at end of text means next word should adjoin without space
+        if text and text[-1] == '\u2014':
             self.suppressNextSpace = True
 
         return retval
@@ -285,6 +305,11 @@ class AccordanceWalker(UsfmWalker):
                 print("Skipping: " + self.render(child))
                 continue  # drop footnotes/crossrefs inside spans
             parts.append(self.render(child))
+        # Mark that we just exited an inline span. The space between \add*
+        # and the next text in USFM is a markup artifact (required by the
+        # spec to avoid ambiguity) and should not become a content space
+        # before closing punctuation.
+        self.after_inline_span = True
         return ''.join(parts)
 
 
@@ -301,10 +326,12 @@ class SimplifyWalker(UsfmWalker):
     def __init__(self):
         """Initialize simplify walker."""
         self.suppressNextSpace = False
+        self.after_inline_span = False
 
     def visit_verse(self, node: Verse) -> str:
         """Render verse content without reference."""
         self.suppressNextSpace = False
+        self.after_inline_span = False
         content = ''.join(self.render(child) for child in node.children)
         return content
 
@@ -312,17 +339,30 @@ class SimplifyWalker(UsfmWalker):
         """Render text with punctuation spacing rules."""
         text = node.value
         if text and text[0] in '.,:;!?)]}”’':
+            self.after_inline_span = False
             return text
-        
+
+        # After an inline span, suppress space for closing punctuation
+        if self.after_inline_span and text:
+            if text[0] in ('"', "'") and (len(text) == 1 or not text[1].isalpha()):
+                self.after_inline_span = False
+                return text
+        self.after_inline_span = False
+
         if (getattr(self, 'suppressNextSpace', False)):
             retval = text
             self.suppressNextSpace = False
         else:
             retval = ' ' + text
             
-        if text and text in ("\"", "“", "‘", "(", "[", "{"):
+        # \u201c is left double quote; 2018 is left single quote
+        if text and text in ("\"", "\u201c", "\u2018", "(", "[", "{"):
             self.suppressNextSpace = True
-            
+
+        # Em-dash at end of text means next word should adjoin without space
+        if text and text[-1] == '\u2014':
+            self.suppressNextSpace = True
+
         return retval
 
     def visit_glossaryword(self, node: GlossaryWord) -> str:
@@ -339,6 +379,7 @@ class SimplifyWalker(UsfmWalker):
             if isinstance(child, (Footnote, CrossRef)):
                 continue
             parts.append(self.render(child))
+        self.after_inline_span = True
         return ''.join(parts)
 
 
