@@ -258,9 +258,11 @@ class UsfmParser:
                     book.children.append(heading)
                 else:
                     # Other markers - skip for now
+                    raise RuntimeError(f"{self.filename}:{token.line}: Unexpected marker at book level (missing chapter?): {token.value}")
                     self._advance()
             else:
                 # Skip text outside chapters
+                raise RuntimeError(f"{self.filename}:{token.line}: Invalid text or endmarker token at book level: {token.value}")
                 self._advance()
 
         return book

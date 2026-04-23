@@ -314,11 +314,15 @@ In the usfmwalker, there are two more little bugs in usfmToAccordanceTests/test1
 ### Bug 3
 In the usfmwalker, there are three more spacing bugs exposed by usfmToAccordanceTests/test19.usfm, usfmToAccordanceTests/test20.usfm, and usfmToAccordanceTests/test21.usfm which result in extra spaces in the output. These bugs are related to the presence of inline \add markers in the usfm inputs. The failing tests are integrated into the pytest tests in tests/test_integration_suite.py. Can you find the cause of this and suggestion a fix while keeping all the other tests working?
 
-### Bug 4
-The fourth bug in usfmToAccordanceTests/test21.usfm is a shortcoming in error reporting. test21.usfm is missing a chapter number, which is required. But the output is empty. Instead, it should indicate the error about the missing chapter number to alert the user to fix the input.
+Antigravity = Claude Opus 4.6 fixed this bug after a lot of thinking. 
 
-Trajectory ID: f4697f28-c2bf-421b-b908-fc737180a19b
-Error: HTTP 500 Internal Server Error
-Sherlog: 
-TraceID: 0xd97cf837ad1458fe
-Headers: {"Alt-Svc":["h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"],"Content-Length":["109"],"Content-Type":["text/event-stream"],"Date":["Tue, 21 Apr 2026 18:22:41 GMT"],"Server":["ESF"],"Server-Timing":["gfet4t7; dur=38076"],"Vary":["Origin","X-Origin","Referer"],"X-Cloudaicompanion-Trace-Id":["d97cf837ad1458fe"],"X-Content-Type-Options":["nosniff"],"X-Frame-Options":["SAMEORIGIN"],"X-Xss-Protection":["0"]}
+### Bug 4
+The fourth bug in usfmToAccordanceTests/test22.usfm is a shortcoming in error reporting. test21.usfm is missing a chapter number, which is required. But the output is empty. Instead, it should indicate the error about the missing chapter number to alert the user to fix the input.
+
+Although test22.acc lists the correct output as text, I really want the error message raised as an exception and reported to the user.
+
+I fixed this myself when I ran out of credits on the models in Antigravity (!). In parse_book, there were two places where the parser simply dropped text. That is not permitted. So I added:
+
+raise RuntimeError(f"Unexpected marker at book level (missing chapter?): {token.value} on line {token.line}")
+and
+raise RuntimeError(f"Invalid text or endmarker token at book level: {token.value} on line {token.line}")
