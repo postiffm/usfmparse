@@ -201,9 +201,27 @@ class TestIntegrationSuite:
         expected = read_expected_output(21)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
     def test_test22_missing_chapter_marker(self):
-        """Test 22: Missing chapter marker."""
-        actual = parse_and_render(22)
-        expected = read_expected_output(22)
+        """Test 22: Missing chapter marker should raise error."""
+        usfm_file = TEST_DIR / "test22.usfm"
+        if not usfm_file.exists():
+            pytest.skip("Test file test22.usfm not found")
+        
+        parser = UsfmParser()
+        
+        with pytest.raises(RuntimeError) as exc_info:
+            parser.load(str(usfm_file))
+        
+        # Verify error message mentions missing chapter
+        assert "chapter" in str(exc_info.value).lower()      
+    def test_test23_a0_front_matter(self):
+        """Test 23: A0 front matter."""
+        actual = parse_and_render(23)
+        expected = read_expected_output(23)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test24_spacing_bug(self):
+        """Test 24: Spacing bug."""
+        actual = parse_and_render(24)
+        expected = read_expected_output(24)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 

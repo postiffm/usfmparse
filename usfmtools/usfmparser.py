@@ -229,8 +229,29 @@ class UsfmParser:
 
         return doc
 
+    # Paragraph-style markers valid at book level (front-matter/introductions)
+    BOOK_LEVEL_PARAGRAPH_MARKERS = {
+        'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo',
+        'q', 'q1', 'q2', 'q3', 'q4', 'qc', 'qs',
+        'li', 'li1', 'li2',
+    }
+
+    # Heading-style markers valid at book level
+    BOOK_LEVEL_HEADING_MARKERS = {
+        'h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms',
+        'imt1', 'imt2',
+        # Front-matter / introduction headings
+        'periph', 'is', 'is1', 'is2', 'ip', 'ipr', 'imq', 'iot',
+        'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
+    }
+
     def _parse_book(self) -> Book:
-        """Parse a book starting from \\id marker."""
+        """Parse a book starting from \\id marker.
+        
+        Handles both regular Bible books (with \\c markers) and
+        front-matter/introduction files (like A0FRT, B0TDX) that
+        contain paragraph and heading markers without chapters.
+        """
         # Consume \\id marker
         self._advance()
 
@@ -252,17 +273,40 @@ class UsfmParser:
                     # Chapter marker
                     chapter = self._parse_chapter()
                     book.children.append(chapter)
-                elif token.value in ('h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms', 'imt1', 'imt2'):
-                    # Heading/title markers
+                elif token.value == 'v':
+                    # Verse marker without a chapter — this is an error
+                    raise RuntimeError(
+                        f"{self.filename}:{token.line}: "
+                        f"Verse marker \\v at book level without a preceding \\c (missing chapter?)")
+                elif token.value in self.BOOK_LEVEL_HEADING_MARKERS:
+                    # Heading/title markers (including front-matter headings)
                     heading = self._parse_heading()
                     book.children.append(heading)
-                else:
-                    # Other markers - skip for now
-                    raise RuntimeError(f"{self.filename}:{token.line}: Unexpected marker at book level (missing chapter?): {token.value}")
+                elif token.value in self.BOOK_LEVEL_PARAGRAPH_MARKERS:
+                    # Paragraph markers (valid in front-matter/introductions)
+                    para = self._parse_paragraph()
+                    # Collect text content following the paragraph marker
+                    while self._current_token():
+                        t = self._current_token()
+                        if t.type != TOKEN_TEXT:
+                            break
+                        para.children.append(Text(value=self._advance().value))
+                    book.children.append(para)
+                elif token.value == 'rem':
+                    # Comment marker — consume marker and following text
                     self._advance()
+                    while self._current_token() and self._current_token().type == TOKEN_TEXT:
+                        self._advance()
+                else:
+                    # Truly unexpected marker at book level
+                    raise RuntimeError(
+                        f"{self.filename}:{token.line}: "
+                        f"Unexpected marker at book level (missing chapter?): {token.value}")
+            elif token.type == TOKEN_TEXT:
+                # Text outside chapters — store in AST for front-matter content
+                book.children.append(Text(value=self._advance().value))
             else:
-                # Skip text outside chapters
-                raise RuntimeError(f"{self.filename}:{token.line}: Invalid text or endmarker token at book level: {token.value}")
+                # End markers at book level — skip
                 self._advance()
 
         return book

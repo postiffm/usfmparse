@@ -273,9 +273,8 @@ class AccordanceWalker(UsfmWalker):
             # Normal text gets a leading space for word separation
             retval = ' ' + text
 
-        # Bug in test14.usfm where opening " as a token by itself has a space after it. Should not.
-        # \u201c is left double quote; 2018 is left single quote
-        if text and text in ("\"", "\u201c", "\u2018", "(", "[", "{"):
+        # \u201c is left double quote; \u2018 is left single quote
+        if text and text in ("\"", "'", "\u201c", "\u2018", "(", "[", "{"):
             self.suppressNextSpace = True
 
         # Em-dash at end of text means next word should adjoin without space
@@ -355,8 +354,8 @@ class SimplifyWalker(UsfmWalker):
         else:
             retval = ' ' + text
             
-        # \u201c is left double quote; 2018 is left single quote
-        if text and text in ("\"", "\u201c", "\u2018", "(", "[", "{"):
+        # \u201c is left double quote; \u2018 is left single quote
+        if text and text in ("\"", "'", "\u201c", "\u2018", "(", "[", "{"):
             self.suppressNextSpace = True
 
         # Em-dash at end of text means next word should adjoin without space
