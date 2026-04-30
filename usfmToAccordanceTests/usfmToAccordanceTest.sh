@@ -62,4 +62,11 @@ $SCRIPT test21.usfm > test21.tmp
 diff test21.acc test21.tmp
 $SCRIPT test22.usfm > test22.tmp
 diff test22.acc test22.tmp
-
+$SCRIPT test23.usfm > test23.tmp
+diff test23.acc test23.tmp
+$SCRIPT test24.usfm > test24.tmp
+diff test24.acc test24.tmp
+$SCRIPT --separate-quotes test25.usfm > test25.tmp
+diff test25.acc test25.tmp
+$SCRIPT test26.usfm > test26.tmp
+diff test26.acc test26.tmp
