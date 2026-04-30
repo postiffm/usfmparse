@@ -328,8 +328,12 @@ and
 raise RuntimeError(f"Invalid text or endmarker token at book level: {token.value} on line {token.line}")
 
 ### Bug 5
-
 The parser does not handle A0 front matter or other USFM files whose names usually begin with an A or a B (like A0FRT or B0TDX). Although I do not want the contents of those files printed by the AccordanceWalker, the contents do need to be parsed and stored in the AST so that they can be used by other walkers in the future. These files should not cause a parse error because they are valid USFM. See usfmToAccordanceTests/test23.usfm and the expected result file test23.acc for what I am after.
 
 ### Bug 6
-In usfmToAccordanceTests/test24.usfm, there is another spacing bug in the output (usfmToAccrdanceTests/test24.acc) this time with a single quotation mark that is followed by an \add marker. We have seen this bug before, but I think it was a double quotation mark.
+In usfmToAccordanceTests/test24.usfm, there is another spacing bug in the output. usfmToAccrdanceTests/test24.acc has the correct output. This time the bug is a single quotation mark that is followed by an \add marker. In the output, it is rendered with a space after it, but there should be no space. We have seen this bug before, but I think it was a double quotation mark.
+
+### Bug 7 
+When there are two closing quotation marks in a row, there are sometimes spaces in the original, and sometimes not. The EMTV is consistent in wanting ending nested quotes like this: " ' or " ' ", not " '" which lacks the space between the final two marks.
+
+I want consistency more than I care about which option we use (" ' " or "'").
