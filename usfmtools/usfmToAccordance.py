@@ -39,8 +39,14 @@ if sys.stdout.encoding != 'utf-8':
     default=False,
     help='Enable debug output to stderr. Default: False'
 )
+@click.option(
+    '--separate-quotes/--no-separate-quotes',
+    default=False,
+    help='Separate consecutive closing quotes with spaces. Default: False'
+)
 @click.argument('files', nargs=-1, required=True)
-def main(para: bool, tc: bool, debug: bool, files: tuple) -> None:
+def main(para: bool, tc: bool, debug: bool, separate_quotes: bool,
+         files: tuple) -> None:
     """
     Convert USFM files to Accordance-compatible format.
     
@@ -51,10 +57,11 @@ def main(para: bool, tc: bool, debug: bool, files: tuple) -> None:
         para: Include paragraph markers in output
         tc: Include text-critical marks in output
         debug: Enable debug output
+        separate_quotes: Separate consecutive closing quotes with spaces
         files: Tuple of file paths to process
     """
     parser = UsfmParser(debug=debug)
-    walker = AccordanceWalker(para=para, tc=tc)
+    walker = AccordanceWalker(para=para, tc=tc, separate_quotes=separate_quotes)
     
     for filename in files:
         try:

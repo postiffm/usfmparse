@@ -58,6 +58,26 @@ class Paragraph(UsfmNode):
 
 
 @dataclass
+class TableCell(UsfmNode):
+    """Table cell."""
+    marker: str  # 'th1', 'tc1', 'thr1', 'tcr1', etc.
+    children: List[UsfmNode] = field(default_factory=list)
+
+
+@dataclass
+class TableRow(UsfmNode):
+    """Table row containing cells."""
+    marker: str  # 'tr'
+    children: List[UsfmNode] = field(default_factory=list)
+
+
+@dataclass
+class Table(UsfmNode):
+    """Table containing rows."""
+    children: List[UsfmNode] = field(default_factory=list)
+
+
+@dataclass
 class Heading(UsfmNode):
     """Section heading or title."""
     marker: str  # 's1', 's2', 'h', 'mt1', etc.
@@ -245,6 +265,14 @@ class UsfmParser:
         'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
     }
 
+    # Table markers
+    TABLE_MARKERS = {
+        'tr', 'th1', 'th2', 'th3', 'th4', 'th5',
+        'thr1', 'thr2', 'thr3', 'thr4', 'thr5',
+        'tc1', 'tc2', 'tc3', 'tc4', 'tc5',
+        'tcr1', 'tcr2', 'tcr3', 'tcr4', 'tcr5'
+    }
+
     def _parse_book(self) -> Book:
         """Parse a book starting from \\id marker.
         
@@ -292,6 +320,10 @@ class UsfmParser:
                             break
                         para.children.append(Text(value=self._advance().value))
                     book.children.append(para)
+                elif token.value in self.TABLE_MARKERS:
+                    # Table marker
+                    table = self._parse_table()
+                    book.children.append(table)
                 elif token.value == 'rem':
                     # Comment marker — consume marker and following text
                     self._advance()
@@ -435,6 +467,50 @@ class UsfmParser:
 
         return Heading(marker=marker, text=' '.join(text_parts))
 
+    def _parse_table(self) -> Table:
+        """Parse a table containing rows and cells."""
+        table = Table()
+        
+        while self._current_token():
+            token = self._current_token()
+            if token.type == TOKEN_MARKER and token.value in self.TABLE_MARKERS:
+                if token.value == 'tr':
+                    row = TableRow(marker=token.value)
+                    self._advance()
+                    table.children.append(row)
+                else:
+                    # Table cell
+                    cell = TableCell(marker=token.value)
+                    self._advance()
+                    
+                    # Consume cell content
+                    while self._current_token():
+                        t = self._current_token()
+                        # Stop if we hit another table marker or a block marker
+                        if t.type == TOKEN_MARKER and (
+                                t.value in self.TABLE_MARKERS or 
+                                t.value in ('c', 'v', 'p', 'm', 's', 'id')):
+                            break
+                        
+                        inline = self._parse_inline_content()
+                        if inline:
+                            cell.children.append(inline)
+                        elif self._current_token() and self._current_token().type == TOKEN_TEXT:
+                            cell.children.append(Text(value=self._advance().value))
+                        else:
+                            # Might be an unhandled token or EOF
+                            break
+                            
+                    # Add cell to the last row, or create a row if none exists
+                    if not table.children:
+                        table.children.append(TableRow(marker='tr'))
+                    table.children[-1].children.append(cell)
+            else:
+                # Not a table marker anymore
+                break
+                
+        return table
+
     def _parse_inline_content(self) -> Optional[UsfmNode]:
         """Parse inline content within a verse."""
         token = self._current_token()
@@ -453,7 +529,10 @@ class UsfmParser:
                 return self._parse_footnote()
             elif marker == 'x':
                 return self._parse_crossref()
-            elif marker in ('nd', 'add', 'qt', 'tl', 'rq', 'k'):
+            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt'):
+                return self._parse_inline_span()
+            # Character styling (strongly discouraged)
+            elif marker in ('em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup'):
                 return self._parse_inline_span()
             else:
                 # Unknown inline marker

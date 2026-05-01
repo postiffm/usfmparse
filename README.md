@@ -334,6 +334,13 @@ The parser does not handle A0 front matter or other USFM files whose names usual
 In usfmToAccordanceTests/test24.usfm, there is another spacing bug in the output. usfmToAccrdanceTests/test24.acc has the correct output. This time the bug is a single quotation mark that is followed by an \add marker. In the output, it is rendered with a space after it, but there should be no space. We have seen this bug before, but I think it was a double quotation mark.
 
 ### Bug 7 
-When there are two closing quotation marks in a row, there are sometimes spaces in the original, and sometimes not. The EMTV is consistent in wanting ending nested quotes like this: " ' or " ' ", not " '" which lacks the space between the final two marks.
+usfmToAccordanceTests/test25.usfm demonstrates the need for a new commnad-line parameter --separate-quotes. When this is true, usfmToAccrdanceTests/test25.acc has the correct output. Namely, when there are two or more closing quotation marks in a row, there should be a space between them, like this: " ', or " ' ", not " '" which lacks the space between the final two marks.
 
-I want consistency more than I care about which option we use (" ' " or "'").
+--separate-quotes should default to False and in that case the output should be "'". When --separate-quotes is set True by the user issuing the command-line flag, then the output should be " ' ".
+
+The initial fix for test25 does not work quite right. I have added usfmToAccordanceTests/test26.usfm which is the same as test25 except that --separate-quotes is false. When false, all the closing quotes should print without any spaces. With --separate-quotes=true, there should be spaces between the two closing quotes. The tests currently compare the output to the expected results in the .acc files. So when you run pytest, you will see the failures for the two tests.
+
+### Bug 8
+usfmToAccordanceTests/test27.usfm contains tables, which are valid in USFM but not currently handled by the USFM parser. I would like to fix this and add support for tables. tests/test_integration_suite.py demonstrates this bug.  The correct output from the AccordanceWalker is empty, but there should be no errors and the AST should be correctly populated with teh table. test27.acc has the correct output. I started the implementation with a call to _parse_table but please suggest if this is the right high-level approach and then if it is, implement _parse_table so that it returns a UsfmTable node and add the appropriate AST node definitions.
+
+After you implemented this change, table support is partially working. It is unclear to me why test27.usfm complains about unknown markers th4, tc4, and tc5. They are listed in TABLE_MARKERS  in usfmparser.py.

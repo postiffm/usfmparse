@@ -53,11 +53,18 @@ KNOWN_MARKERS = {
     # Cross-references
     'x', 'xo', 'xt',
     # Character styles
+    # There should be a better way to handle "+" nested markers
     'w', 'nd', 'add', 'qt', 'tl', 'rq', 'k',
+    '+w', '+nd', '+add', '+qt', '+tl', '+rq', '+k',
+    'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup',
+    '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup',
     # Tables
-    'tr', 'th1', 'th2', 'th3', 'tc1', 'tc2', 'tc3',
+    'tr', 'th1', 'th2', 'th3', 'th4', 'th5',
+    'thr1', 'thr2', 'thr3', 'thr4', 'thr5',
+    'tc1', 'tc2', 'tc3', 'tc4', 'tc5',
+    'tcr1', 'tcr2', 'tcr3', 'tcr4', 'tcr5',
     # Special
-    'periph', '+w',
+    'periph',
 }
 
 

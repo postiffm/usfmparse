@@ -9,7 +9,8 @@ to dispatch to node-specific methods.
 import sys
 from usfmtools.usfmparser import (
     UsfmNode, Document, Book, Chapter, Verse, Paragraph, Heading,
-    Footnote, CrossRef, GlossaryWord, InlineSpan, Text, Unknown
+    Footnote, CrossRef, GlossaryWord, InlineSpan, Text, Unknown,
+    Table, TableRow, TableCell
 )
 
 
@@ -82,6 +83,18 @@ class UsfmWalker:
         # MAP: Depending on what the the derived class wants, the above may be inappropriate.
         return ''.join(self.render(child) for child in node.children)
 
+    def visit_table(self, node: Table) -> str:
+        """Render table - default: emit children."""
+        return ''.join(self.render(child) for child in node.children)
+
+    def visit_tablerow(self, node: TableRow) -> str:
+        """Render table row - default: emit children."""
+        return ''.join(self.render(child) for child in node.children)
+
+    def visit_tablecell(self, node: TableCell) -> str:
+        """Render table cell - default: emit children."""
+        return ''.join(self.render(child) for child in node.children)
+
     def visit_text(self, node: Text) -> str:
         """Render text node."""
         return node.value
@@ -137,16 +150,22 @@ class AccordanceWalker(UsfmWalker):
         "JUD": "Jude", "REV": "Rev."
     }
 
-    def __init__(self, para: bool = True, tc: bool = True):
+    # Characters considered quotation marks for --separate-quotes logic
+    QUOTE_CHARS = {'"', "'", '\u201c', '\u201d', '\u2018', '\u2019'}
+
+    def __init__(self, para: bool = True, tc: bool = True,
+                 separate_quotes: bool = False):
         """
         Initialize Accordance walker.
 
         Args:
             para: Include paragraph markers (¶) in output
             tc: Include text-critical marks (⸂ and ⸃) in output
+            separate_quotes: Separate consecutive closing quotes with spaces
         """
         self.para = para
         self.tc = tc
+        self.separate_quotes = separate_quotes
         self.first_verse = True
         self.pending_paragraph = False
         self.current_book = None
@@ -154,6 +173,7 @@ class AccordanceWalker(UsfmWalker):
         self.suppressNextSpace = False
         self.after_inline_span = False
         self.in_verse = False
+        self.last_char = ''  # Last character of previous visit_text output
 
     def visit_book(self, node: Book) -> str:
         """Render book - skip if in SKIPPED_BOOKS."""
@@ -222,6 +242,16 @@ class AccordanceWalker(UsfmWalker):
         self.pending_paragraph = True
         return ''.join(self.render(child) for child in node.children)
 
+    def visit_table(self, node: Table) -> str:
+        """Accordance does not support tables. Output nothing."""
+        return ''
+
+    def visit_tablerow(self, node: TableRow) -> str:
+        return ''
+
+    def visit_tablecell(self, node: TableCell) -> str:
+        return ''
+
     def visit_text(self, node: Text) -> str:
         """
         Render text with punctuation spacing rules.
@@ -267,11 +297,24 @@ class AccordanceWalker(UsfmWalker):
         self.after_inline_span = False
 
         if (self.suppressNextSpace == True):
-            retval = text
+            # When separate_quotes is enabled, override suppression if both
+            # the previous output and current token are quote characters.
+            # This keeps spaces between consecutive closing quotes like " ' "
+            if (self.separate_quotes and text in self.QUOTE_CHARS
+                    and self.last_char in self.QUOTE_CHARS):
+                retval = ' ' + text
+            else:
+                retval = text
             self.suppressNextSpace = False
         else:
-            # Normal text gets a leading space for word separation
-            retval = ' ' + text
+            # When separate_quotes is disabled, glue consecutive closing
+            # quotes together without spaces (e.g. "'" not " ' ")
+            if (not self.separate_quotes and text in self.QUOTE_CHARS
+                    and self.last_char in self.QUOTE_CHARS):
+                retval = text
+            else:
+                # Normal text gets a leading space for word separation
+                retval = ' ' + text
 
         # \u201c is left double quote; \u2018 is left single quote
         if text and text in ("\"", "'", "\u201c", "\u2018", "(", "[", "{"):
@@ -280,6 +323,10 @@ class AccordanceWalker(UsfmWalker):
         # Em-dash at end of text means next word should adjoin without space
         if text and text[-1] == '\u2014':
             self.suppressNextSpace = True
+
+        # Track last character for separate_quotes logic
+        if text:
+            self.last_char = text[-1]
 
         return retval
 

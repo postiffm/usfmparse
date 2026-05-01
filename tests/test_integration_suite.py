@@ -40,14 +40,15 @@ def read_expected_output(test_num: int) -> str:
         return normalize_output(f.read())
 
 
-def parse_and_render(test_num: int, para: bool = True, tc: bool = True) -> str:
+def parse_and_render(test_num: int, para: bool = True, tc: bool = True,
+                     separate_quotes: bool = False) -> str:
     """Parse USFM file and render to Accordance format."""
     usfm_file = TEST_DIR / f"test{test_num}.usfm"
     if not usfm_file.exists():
         pytest.skip(f"Test file test{test_num}.usfm not found")
     
     parser = UsfmParser()
-    walker = AccordanceWalker(para=para, tc=tc)
+    walker = AccordanceWalker(para=para, tc=tc, separate_quotes=separate_quotes)
     
     doc = parser.load(str(usfm_file))
     output = walker.render(doc)
@@ -223,7 +224,21 @@ class TestIntegrationSuite:
         actual = parse_and_render(24)
         expected = read_expected_output(24)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
-
+    def test_test25_nested_closing_quotes(self):
+        """Test 25: nested closing quotes with --separate-quotes."""
+        actual = parse_and_render(25, separate_quotes=True)
+        expected = read_expected_output(25)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test26_nested_closing_quotes(self):
+        """Test 26: nested closing quotes without --separate-quotes."""
+        actual = parse_and_render(26, separate_quotes=False)
+        expected = read_expected_output(26)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test27_tables(self):
+        """Test 27: tables. Must be able to handle, though no output from AccordanceWalker."""
+        actual = parse_and_render(27)
+        expected = read_expected_output(27)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""
