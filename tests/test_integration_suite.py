@@ -239,6 +239,21 @@ class TestIntegrationSuite:
         actual = parse_and_render(27)
         expected = read_expected_output(27)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test28_a0_front_matter(self):
+        """Test 28: s1 in A0 error."""
+        actual = parse_and_render(28)
+        expected = read_expected_output(28)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test29_heading_marker_error(self):
+        """Test 29: xt marker error."""
+        actual = parse_and_render(29)
+        expected = read_expected_output(29)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test30_various_markers(self):
+        """Test 30: Various markers that are not working like im, +xt, +xt*."""
+        actual = parse_and_render(30)
+        expected = read_expected_output(30)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""

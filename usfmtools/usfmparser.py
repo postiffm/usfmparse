@@ -251,18 +251,21 @@ class UsfmParser:
 
     # Paragraph-style markers valid at book level (front-matter/introductions)
     BOOK_LEVEL_PARAGRAPH_MARKERS = {
-        'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo',
-        'q', 'q1', 'q2', 'q3', 'q4', 'qc', 'qs',
+        'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'qd',
+        'q', 'q1', 'q2', 'q3', 'q4', 'qr', 'qc', 'qs',
         'li', 'li1', 'li2',
+        # Intro paragraphs
+        'ip', 'ipr', 'im', 'imq', 'iot', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
     }
 
     # Heading-style markers valid at book level
     BOOK_LEVEL_HEADING_MARKERS = {
         'h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms',
         'imt1', 'imt2',
+        # Section headings
+        's', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa',
         # Front-matter / introduction headings
-        'periph', 'is', 'is1', 'is2', 'ip', 'ipr', 'imq', 'iot',
-        'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
+        'periph', 'is', 'is1', 'is2',
     }
 
     # Table markers
@@ -313,22 +316,35 @@ class UsfmParser:
                 elif token.value in self.BOOK_LEVEL_PARAGRAPH_MARKERS:
                     # Paragraph markers (valid in front-matter/introductions)
                     para = self._parse_paragraph()
-                    # Collect text content following the paragraph marker
+                    # Collect content following the paragraph marker
                     while self._current_token():
                         t = self._current_token()
-                        if t.type != TOKEN_TEXT:
+                        if t.type == TOKEN_MARKER and (
+                                t.value in self.BOOK_LEVEL_HEADING_MARKERS or
+                                t.value in self.BOOK_LEVEL_PARAGRAPH_MARKERS or
+                                t.value in self.TABLE_MARKERS or
+                                t.value in ('c', 'v', 'id', 'rem')):
                             break
-                        para.children.append(Text(value=self._advance().value))
+                        
+                        node = self._parse_inline_content()
+                        if node:
+                            para.children.append(node)
                     book.children.append(para)
                 elif token.value in self.TABLE_MARKERS:
                     # Table marker
                     table = self._parse_table()
                     book.children.append(table)
                 elif token.value == 'rem':
-                    # Comment marker — consume marker and following text
+                    # Comment marker — consume marker and all tokens on the same line
+                    rem_line = token.line
                     self._advance()
-                    while self._current_token() and self._current_token().type == TOKEN_TEXT:
+                    while self._current_token() and self._current_token().line == rem_line:
                         self._advance()
+                elif token.value in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup', 'w', '+w', 'f', 'x'):
+                    # Inline marker directly at book level
+                    node = self._parse_inline_content()
+                    if node:
+                        book.children.append(node)
                 else:
                     # Truly unexpected marker at book level
                     raise RuntimeError(
@@ -366,11 +382,11 @@ class UsfmParser:
                     # Verse marker
                     verse = self._parse_verse()
                     chapter.children.append(verse)
-                elif token.value in ('p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'q', 'q1', 'q2', 'q3', 'q4', 'qc', 'qs', 'li', 'li1', 'li2'):
+                elif token.value in self.BOOK_LEVEL_PARAGRAPH_MARKERS:
                     # Paragraph markers
                     para = self._parse_paragraph()
                     chapter.children.append(para)
-                elif token.value in ('s', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa', 'is', 'ip', 'ipr', 'imq', 'iot', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili'):
+                elif token.value in self.BOOK_LEVEL_HEADING_MARKERS:
                     # Heading markers
                     heading = self._parse_heading()
                     chapter.children.append(heading)
@@ -421,7 +437,7 @@ class UsfmParser:
             # 1. Before a verse (indicating the verse starts a new paragraph)
             # 2. Within a verse (just formatting, should be skipped)
             # We use lookahead to distinguish these cases.
-            if token.type == TOKEN_MARKER and token.value in ('p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'q', 'q1', 'q2', 'q3', 'q4', 'qc', 'qs', 'li', 'li1', 'li2'):
+            if token.type == TOKEN_MARKER and token.value in self.BOOK_LEVEL_PARAGRAPH_MARKERS:
                 # Look ahead to see if next token is a verse marker
                 next_idx = self.pos + 1
                 if next_idx < len(self.tokens):
@@ -529,7 +545,7 @@ class UsfmParser:
                 return self._parse_footnote()
             elif marker == 'x':
                 return self._parse_crossref()
-            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt'):
+            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash'):
                 return self._parse_inline_span()
             # Character styling (strongly discouraged)
             elif marker in ('em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup'):

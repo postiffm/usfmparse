@@ -37,25 +37,25 @@ KNOWN_MARKERS = {
     # Titles
     'mt', 'mt1', 'mt2', 'mt3', 'ms', 'imt1', 'imt2',
     # Introductions
-    'is', 'ip', 'ipr', 'imq', 'iot', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
+    'is', 'ip', 'ipr', 'im', 'imq', 'iot', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
     # Headings
     's', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa',
     # Chapter and Verse
     'c', 'v',
     # Paragraphs
-    'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo',
+    'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'qd',
     # Poetry
-    'q', 'q1', 'q2', 'q3', 'q4', 'qc', 'qs',
+    'q', 'q1', 'q2', 'q3', 'q4', 'qr', 'qc', 'qs',
     # Lists
     'li', 'li1', 'li2',
     # Footnotes
     'f', 'fr', 'fk', 'ft', 'fw', 'fp',
     # Cross-references
-    'x', 'xo', 'xt',
+    'x', 'xo', 'xt', '+xt',
     # Character styles
     # There should be a better way to handle "+" nested markers
-    'w', 'nd', 'add', 'qt', 'tl', 'rq', 'k',
-    '+w', '+nd', '+add', '+qt', '+tl', '+rq', '+k',
+    'w', 'nd', 'add', 'qt', 'tl', 'rq', 'k', 'zhash',
+    '+w', '+nd', '+add', '+qt', '+tl', '+rq', '+k', '+zhash',
     'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup',
     '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup',
     # Tables
