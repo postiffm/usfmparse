@@ -691,7 +691,11 @@ class UsfmParser:
                 break
 
             # Safety check to avoid swallowing entire document if span is unclosed
-            if token.type == TOKEN_MARKER and token.value in ('c', 'v', 'p', 'm', 'q', 's', 's1', 's2', 's3', 'b', 'nb', 'tr', 'tc1', 'tc2', 'tc3'):
+            if token.type == TOKEN_MARKER and token.value in (
+                'c', 'v', 'p', 'p1', 'p2', 'm', 'm1', 'm2', 'q', 'q1', 'q2', 'q3', 'q4', 
+                's', 's1', 's2', 's3', 'b', 'nb', 'tr', 'tc1', 'tc2', 'tc3', 'r', 'mr', 
+                'ms', 'ms1', 'ms2', 'd', 'sp', 'li', 'li1', 'li2', 'li3'
+            ):
                 break
 
             elif token.type == TOKEN_TEXT:

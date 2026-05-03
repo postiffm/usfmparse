@@ -294,6 +294,13 @@ class TestIntegrationSuite:
         actual = parse_and_render(38)
         expected = read_expected_output(38)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    # Have to run test39.usfm and test40.usfm together to expose the Unknown Unknown and Skipping bug.
+    def test_test41_q1_unknown(self):
+        """Test 41: Unknown \q1 marker from test41.usfm."""
+        actual = parse_and_render(41)
+        expected = read_expected_output(41)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""

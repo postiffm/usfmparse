@@ -373,3 +373,6 @@ Extra text on an \id line until the end of that line should not issue any warnin
 Why is it that when I run 
 cd usfmToAccordanceTests ; python3 -m usfmtools.usfmToAccordance test39.usfm test40.usfm  > test39.acc 2>&1
 that the AccordanceWalker outputs the string "Warning: Unknown Unknown" twice as well as several messages about "Skipping:" It only happens when I process the two files together, not separate, and I cannot figure out how to shorten the second file while still retaining the error. I need help identifying the bug and shortening test39.usfm and test40.usfm
+
+### Bug 17 
+test41.usfm contains a \q1 marker that is not recognized by the USFM parser. This is clearly an error since \q1 is a valid marker. It should be recognized as a marker and included in the AST. This bug can be seen by running `pytest tests/test_integration_suite.py` and looking at the output for `test_test41_q1_unknown`. Unfortunately, the output seems to be missing the warnings, perhaps because they are printed to stderr. The test harness should catch that for us.
