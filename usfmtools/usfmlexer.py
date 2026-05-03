@@ -131,6 +131,25 @@ def tokenize(text: str, filename: str = '') -> List[UsfmToken]:
                 tokens.append(UsfmToken(type=TOKEN_TEXT, value=comment_text.strip(), line=line_num))
             continue
             
+        # If the word starts with '\id', it's the book ID line.
+        if word == r'\id' or word.startswith(r'\id'):
+            tokens.append(UsfmToken(type=TOKEN_MARKER, value='id', line=line_num))
+            
+            # Consume everything until newline as text
+            remainder = word[3:]
+            text_start = pos
+            while pos < len(text) and text[pos] != '\n':
+                pos += 1
+                
+            id_line_text = remainder + text[text_start:pos]
+            if id_line_text.strip():
+                # Split into book ID and description
+                parts = id_line_text.strip().split(None, 1)
+                tokens.append(UsfmToken(type=TOKEN_TEXT, value=parts[0], line=line_num))
+                if len(parts) > 1:
+                    tokens.append(UsfmToken(type=TOKEN_TEXT, value=parts[1], line=line_num))
+            continue
+            
         # Process the word to extract embedded markers
         tokens.extend(_tokenize_word(word, line_num, filename))
     #print(tokens)

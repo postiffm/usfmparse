@@ -30,6 +30,7 @@ class Document(UsfmNode):
 class Book(UsfmNode):
     """Represents a single Bible book."""
     book_id: str  # Three-letter code: 'MAT', 'GEN', etc.
+    description: str = "" # Extra text on \id line
     # Headers, chapters
     children: List[UsfmNode] = field(default_factory=list)
 
@@ -287,12 +288,18 @@ class UsfmParser:
         contain paragraph and heading markers without chapters.
         """
         # Consume \\id marker
-        self._advance()
+        id_token = self._advance()
+        id_line = id_token.line
 
         # Get book ID (e.g., 'MAT', 'GEN')
         book_id = self._expect_text("Missing book ID after \\id")
 
-        book = Book(book_id=book_id.strip())
+        # Capture extra text on the same line as description
+        description = ""
+        if self._current_token() and self._current_token().line == id_line and self._current_token().type == TOKEN_TEXT:
+            description = self._advance().value
+
+        book = Book(book_id=book_id.strip(), description=description)
 
         # Parse book content until next \\id or EOF
         while self._current_token():

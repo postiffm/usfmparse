@@ -365,3 +365,6 @@ More markers need to be supported: \ms1, \ms2, \zpa-xb, \zpa-xc, \zpa-xv and the
 
 ### Bug 14
 Can you explain why test37.usfm fails with a message about an unexpected \rq marker? Visual inspection of the input file does not show why there must be a failure. It may be because you are expecting an ending marker \qt*, but that is not absolutely required by a loose interpretation of the language. Ideally every input file would have a \qt* to end every \qt opening marker, but that is not how people use USFM. I think the idea is that if a line ends, then the \qt is implicitly closed.
+
+### Bug 15
+Extra text on an \id line until the end of that line should not issue any warning or error message. It should not appear in the AccordanceWalker output. Treat it as a comment include as extra information in the id marker in the AST. See test38.usfm.
