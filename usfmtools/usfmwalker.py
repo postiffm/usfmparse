@@ -355,7 +355,6 @@ class AccordanceWalker(UsfmWalker):
         for child in node.children:
             #print("CHILD: " + self.render(child))
             if isinstance(child, (Footnote, CrossRef)):
-                print("Skipping: " + self.render(child))
                 continue  # drop footnotes/crossrefs inside spans
             parts.append(self.render(child))
         # Mark that we just exited an inline span. The space between \add*
