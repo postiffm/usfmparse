@@ -694,21 +694,19 @@ class UsfmParser:
                 line = token.line if token else 'EOF'
                 # MAP: The following is very similar to code in parse_inline_content and is candidate for refactoring
                 if marker == 'w' or marker == "+w":
-                    return self._parse_glossary_word()
-                elif marker == 'f':
+                    span.children.append(self._parse_glossary_word())
+                elif marker in ('f', 'fe'):
                     # Technically footnotes are not supposed to be inside of \add statements, for example
                     # but we are being lenient.
-                    return self._parse_footnote()
+                    span.children.append(self._parse_footnote())
                 elif marker == 'x':
-                    raise ValueError(f"Unexpected {marker} in {self.filename}:{line}")
-                    #return self._parse_crossref()
-                elif marker in ('nd', 'add', 'qt', 'tl', 'rq', 'k'):
-                    raise ValueError(f"Unexpected {marker} in {self.filename}:{line}")
-                    #return self._parse_inline_span()
+                    span.children.append(self._parse_crossref())
+                elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or marker.startswith('z') or marker.startswith('+z'):
+                    span.children.append(self._parse_inline_span())
                 else:
                     # Unknown inline marker
                     self._advance()
-                    return Unknown(marker=marker)
+                    span.children.append(Unknown(marker=marker))
 
             else:
                 self._advance()

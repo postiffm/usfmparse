@@ -363,3 +363,5 @@ More markers need to be supported: \imt3, \imt4, \fe, \fe*. See test34 and test3
 ### Bug 13
 More markers need to be supported: \ms1, \ms2, \zpa-xb, \zpa-xc, \zpa-xv and their final versions that end in *, like \zpa-xb*. See test36.usfm. In fact, all markers that start with \z are accepted by the language standard, and it would be nice to support all of them in this update to the code. They are all valid markers and should be included in the AST.
 
+### Bug 14
+Can you explain why test37.usfm fails with a message about an unexpected \rq marker? Visual inspection of the input file does not show why there must be a failure. It may be because you are expecting an ending marker \qt*, but that is not absolutely required by a loose interpretation of the language. Ideally every input file would have a \qt* to end every \qt opening marker, but that is not how people use USFM. I think the idea is that if a line ends, then the \qt is implicitly closed.
