@@ -359,3 +359,7 @@ There are many markers in test33.usfm that should be supported. I will not list 
 
 ### Bug 12
 More markers need to be supported: \imt3, \imt4, \fe, \fe*. See test34 and test35 in usfmToAccordanceTests/ and test_integration_suite.py.
+
+### Bug 13
+More markers need to be supported: \ms1, \ms2, \zpa-xb, \zpa-xc, \zpa-xv and their final versions that end in *, like \zpa-xb*. See test36.usfm. In fact, all markers that start with \z are accepted by the language standard, and it would be nice to support all of them in this update to the code. They are all valid markers and should be included in the AST.
+

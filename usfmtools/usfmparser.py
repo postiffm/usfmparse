@@ -262,7 +262,8 @@ class UsfmParser:
 
     # Heading-style markers valid at book level
     BOOK_LEVEL_HEADING_MARKERS = {
-        'h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms',
+        'h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms', 'ms1', 'ms2',
+        # We need to check on \s1r and \s1p. I believe these are errant markers
         'imt1', 'imt2', 'imt', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cd', 's1r', 's1p',
         # Section headings
         's', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa',
@@ -342,7 +343,7 @@ class UsfmParser:
                     self._advance()
                     while self._current_token() and self._current_token().line == rem_line:
                         self._advance()
-                elif token.value in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup', 'w', '+w', 'f', 'fe', 'x', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig'):
+                elif token.value in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup', 'w', '+w', 'f', 'fe', 'x', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or token.value.startswith('z') or token.value.startswith('+z'):
                     # Inline marker directly at book level
                     node = self._parse_inline_content()
                     if node:
@@ -547,7 +548,7 @@ class UsfmParser:
                 return self._parse_footnote()
             elif marker == 'x':
                 return self._parse_crossref()
-            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig'):
+            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or marker.startswith('z') or marker.startswith('+z'):
                 return self._parse_inline_span()
             # Character styling (strongly discouraged)
             elif marker in ('em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup'):
@@ -624,6 +625,10 @@ class UsfmParser:
                 self._advance()  # Consume end marker
                 break
 
+            # Safety check to avoid swallowing entire document if span is unclosed
+            if token.type == TOKEN_MARKER and token.value in ('c', 'v', 'p', 'm', 'q', 's', 's1', 's2', 's3', 'b', 'nb', 'tr', 'tc1', 'tc2', 'tc3'):
+                break
+
             if token.type == TOKEN_TEXT:
                 footnote.children.append(Text(value=self._advance().value))
             elif token.type == TOKEN_MARKER:
@@ -646,6 +651,10 @@ class UsfmParser:
             token = self._current_token()
             if token.type == TOKEN_MARKER_END and token.value == 'x':
                 self._advance()  # Consume \\x*
+                break
+
+            # Safety check to avoid swallowing entire document if span is unclosed
+            if token.type == TOKEN_MARKER and token.value in ('c', 'v', 'p', 'm', 'q', 's', 's1', 's2', 's3', 'b', 'nb', 'tr', 'tc1', 'tc2', 'tc3'):
                 break
 
             if token.type == TOKEN_TEXT:
@@ -671,6 +680,10 @@ class UsfmParser:
 
             if token.type == TOKEN_MARKER_END and token.value == marker:
                 self._advance()  # Consume end marker
+                break
+
+            # Safety check to avoid swallowing entire document if span is unclosed
+            if token.type == TOKEN_MARKER and token.value in ('c', 'v', 'p', 'm', 'q', 's', 's1', 's2', 's3', 'b', 'nb', 'tr', 'tc1', 'tc2', 'tc3'):
                 break
 
             elif token.type == TOKEN_TEXT:

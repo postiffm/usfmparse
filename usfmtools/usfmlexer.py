@@ -35,7 +35,7 @@ KNOWN_MARKERS = {
     # Identification
     'id', 'rem', 'h', 'toc1', 'toc2', 'toc3',
     # Titles
-    'mt', 'mt1', 'mt2', 'mt3', 'ms', 'imt', 'imt1', 'imt2', 'imt3', 'imt4', 'imte', 'mte',
+    'mt', 'mt1', 'mt2', 'mt3', 'ms', 'ms1', 'ms2', 'imt', 'imt1', 'imt2', 'imt3', 'imt4', 'imte', 'mte',
     # Introductions
     'is', 'is1', 'is2', 'ip', 'ipr', 'im', 'imi', 'ipi', 'imq', 'iot', 'io', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili', 'ipq', 'iq', 'ib', 'iex', 'iqt',
     # Headings
@@ -54,7 +54,7 @@ KNOWN_MARKERS = {
     'x', 'xo', 'xt', '+xt',
     # Character styles
     # There should be a better way to handle "+" nested markers
-    'w', 'nd', 'add', 'qt', 'tl', 'rq', 'k', 'zhash', 'bk', 'ord', 'pn', 'wj', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh',
+    'w', 'nd', 'add', 'qt', 'tl', 'rq', 'k', 'zhash', 'bk', 'ord', 'pn', 'wj', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 't',
     '+w', '+nd', '+add', '+qt', '+tl', '+rq', '+k', '+zhash', '+bk', '+ord', '+pn', '+wj', '+s1ig', '+s1ls', '+s1c', '+ndx', '+wg', '+wh',
     'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup',
     '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup',
@@ -163,9 +163,9 @@ def _tokenize_word(word: str, line_num: int, filename: str) -> List[UsfmToken]:
     # Regex to find USFM markers: backslash followed by alphanumeric/+
     # characters, optionally ending with *
     # Pattern: \marker or \marker*
-    # Group 1: marker name (e.g., 'w', 'add', '+w')
+    # Group 1: marker name (e.g., 'w', 'add', '+w', 'zpa-xb')
     # Group 2: optional asterisk for end markers
-    marker_pattern = re.compile(r'\\([a-zA-Z0-9+]+)(\*?)')
+    marker_pattern = re.compile(r'\\([a-zA-Z0-9+]+(?:-[a-zA-Z0-9+]+)*)(\*?)')
     
     pos = 0
     for match in marker_pattern.finditer(word):
@@ -179,7 +179,7 @@ def _tokenize_word(word: str, line_num: int, filename: str) -> List[UsfmToken]:
         is_end_marker = match.group(2) == '*'  # True if marker ends with *
         
         # Check if marker is known (emit warning but continue processing)
-        if marker_name not in KNOWN_MARKERS:
+        if marker_name not in KNOWN_MARKERS and not marker_name.startswith('z') and not marker_name.startswith('+z'):
             # Emit warning for unknown marker but preserve content
             location = f" in {filename}" if filename else ""
             warning_msg = (

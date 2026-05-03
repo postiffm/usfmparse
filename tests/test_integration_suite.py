@@ -279,6 +279,11 @@ class TestIntegrationSuite:
         actual = parse_and_render(35)
         expected = read_expected_output(35)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test36_various_markers(self):
+        """Test 36: Various markers from test36.usfm."""
+        actual = parse_and_render(36)
+        expected = read_expected_output(36)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""
