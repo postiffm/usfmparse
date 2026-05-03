@@ -254,6 +254,31 @@ class TestIntegrationSuite:
         actual = parse_and_render(30)
         expected = read_expected_output(30)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test31_various_markers(self):
+        """Test 30: Various markers that are not working like im, +xt, +xt*."""
+        actual = parse_and_render(31)
+        expected = read_expected_output(31)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test32_various_markers(self):
+        """Test 30: Various markers that are not working like im, +xt, +xt*."""
+        actual = parse_and_render(32)
+        expected = read_expected_output(32)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test33_various_markers(self):
+        """Test 33: Various markers from test33.usfm."""
+        actual = parse_and_render(33)
+        expected = read_expected_output(33)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test34_various_markers(self):
+        """Test 34: Various markers from test34.usfm."""
+        actual = parse_and_render(34)
+        expected = read_expected_output(34)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test35_various_markers(self):
+        """Test 35: Various markers from test35.usfm."""
+        actual = parse_and_render(35)
+        expected = read_expected_output(35)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""

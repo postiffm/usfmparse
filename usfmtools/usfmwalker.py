@@ -339,6 +339,9 @@ class AccordanceWalker(UsfmWalker):
     
     def visit_inlinespan(self, node: InlineSpan) -> str:
         """Render inline span, skipping any footnote or crossref children."""
+        if node.marker == 'fig':
+            return ''
+            
         # test15.usfm has this example:
         # \add \f + \ft Here the apostle uses word play.\f*false\add* where
         # the + Here the apostle... was printed as part of the text. Only

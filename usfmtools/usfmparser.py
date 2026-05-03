@@ -256,12 +256,14 @@ class UsfmParser:
         'li', 'li1', 'li2',
         # Intro paragraphs
         'ip', 'ipr', 'im', 'imq', 'iot', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
+        'ib', 'imi', 'ipi', 'ipq', 'iq', 'io', 'iex',
+        'pm', 'pmc', 'pmr', 'cls', 'pc', 'qm', 'pb',
     }
 
     # Heading-style markers valid at book level
     BOOK_LEVEL_HEADING_MARKERS = {
         'h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms',
-        'imt1', 'imt2',
+        'imt1', 'imt2', 'imt', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cd', 's1r', 's1p',
         # Section headings
         's', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa',
         # Front-matter / introduction headings
@@ -340,7 +342,7 @@ class UsfmParser:
                     self._advance()
                     while self._current_token() and self._current_token().line == rem_line:
                         self._advance()
-                elif token.value in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup', 'w', '+w', 'f', 'x'):
+                elif token.value in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup', 'w', '+w', 'f', 'fe', 'x', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig'):
                     # Inline marker directly at book level
                     node = self._parse_inline_content()
                     if node:
@@ -541,11 +543,11 @@ class UsfmParser:
 
             if marker == 'w' or marker == '+w':
                 return self._parse_glossary_word()
-            elif marker == 'f':
+            elif marker in ('f', 'fe'):
                 return self._parse_footnote()
             elif marker == 'x':
                 return self._parse_crossref()
-            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash'):
+            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig'):
                 return self._parse_inline_span()
             # Character styling (strongly discouraged)
             elif marker in ('em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup'):
@@ -606,19 +608,20 @@ class UsfmParser:
 
     def _parse_footnote(self) -> Footnote:
         """Parse footnote content."""
-        # Consume \\f marker
+        # Consume \\f or \\fe marker
+        start_marker = self._current_token().value
         self._advance()
 
         # Get footnote caller +, -, or ?=char (required - will raise exception if missing)
-        caller = self._expect_text("Missing caller after \\f")
+        caller = self._expect_text(f"Missing caller after \\{start_marker}")
 
         footnote = Footnote(caller)
 
-        # Collect content until \\f*
+        # Collect content until \\f* or \\fe*
         while self._current_token():
             token = self._current_token()
-            if token.type == TOKEN_MARKER_END and token.value == 'f':
-                self._advance()  # Consume \\f*
+            if token.type == TOKEN_MARKER_END and token.value == start_marker:
+                self._advance()  # Consume end marker
                 break
 
             if token.type == TOKEN_TEXT:

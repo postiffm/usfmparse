@@ -1,0 +1,97 @@
+\id XXG - BI Modele \mt Explication/Exemples des Marqueurs \mt 1 Quelques Explications 
+\rem (#) Ce symbole au commencement d'une explication indique que s'il y a plusieurs niveaux de ce marqueur, un chiffre indique le niveau et/ou l'indentation (mt1, mt2, mt3, etc). 
+\rem [Des textes dans des accolades carrés comme ci, donne un contexte pour le(s) prochaine(s) marqueur(s).] 
+\rem {Des explications dans des accolades courbés comme ci, donne la référence dans une version de la Bible où ont peut voir un exemple de ce marqueur.} \mt 2 Identification \id ‹CODE› Nom de dossier, Nom de livre, Langue, Dernière édition, Date etc. – le premier marqueur dans chaque livre - ‹CODE› = abréviation du nom du livre \ide Information de la police, format, etc. \s1ts # Niveau de progrès : 1=ébauche, 2=révision équipe, 3=consulté, 4=texte propre 
+\rem Remarques concernant l'état de la traduction du livre 
+\h L'entête de chaque page imprimé {TOB : GEN 1.0, MAT 1.0} 
+\toc1 Nom complète du livre pour le Table de matières 
+\toc2 Nom court du livre pour le Table de matières 
+\toc3 Abréviation du livre pour des références croisées \mt 3 Introductions \imt (#) Titre pour l'introduction du livre {TOB : GEN 1.0, MAT 1.0} 
+\is (#) Sous-titres pour l'introduction {NBJ : GEN 1.0, MAT 1.0} 
+\ip Paragraphe de l'introduction \ipi Paragraphe de l'introduction renfoncé {KJVA : FRT 4.1} \im Paragraphe de l'introduction aligné à la marge gauche {GNT : GEN 1.0, MAT 1.0} \imi Paragraphe de l'introduction aligné à la marge gauche renfoncé {CEV : FRT 1.0} \ipq Citation dans l'introduction 
+\imq Citation dans l'introduction aligné à la marge gauche 
+\ipr Paragraphe de l'introduction aligné à la marge droit – surtout pour référence d'une citation {CEV : INT 1.0} \iq (#) Paragraphe de poésie dans l'introduction {CEV : FRT 1.0, INT 1.0} \ib [Ligne vierge dans l'introduction – aucune texte après ce marqueur] 
+\ili (#) Elément d'une liste dans l'introduction 
+\iot Titre d'esquisse dans l'introduction {PDV : ISA 1.0, JER 1.0} \io (#) Elément d'esquisse dans l'introduction {PDV : GEN 1.0, JHN 1.0} \ior Références pour chaque élément \ior* \iex Explication dans l'introduction \iqt Citation des Ecritures dans l'introduction\iqt* 
+\ie [Indique fin de l'introduction – sans texte] {KJVA : SIR 1.0} \imte (#) Indique fin de l'introduction – avec texte d'explication 
+\rem [] \mt 4 Titres, Sous-titres, et Indicateurs \mt (#) Titre primaire {FCL : 1SA 1.0, MAT 1.0} 
+\c 1 \mte (#) Indique fin du livre 
+\ms (#) Sous-titre primaire {NBJ : GEN 1.0, MAT 1.0} \mr Référence pour sous-titre primaire {TOB : 1CH 11.3, PSA 1.0} 
+\s1 (#) Autre sous-titre {TOB : LEV 5.0,6, JER 14.1,9,16} \s1r Référence pour sous-titre {GNT : JOB 4, 15, 22, 32} 
+\r Référence croisée {TOB : EXO 20.0, MAT 1.0} 
+\p [Si on veut avoir la \rq Référence croisée cité dans le texte \rq* , c'est fait comme ça !] 
+\d Descriptions au commencement des Psaumes \s1p Identification de locuteur – en Job et Cantique de Cantiques \mt 5 Chapitres et Versets 
+\rem Ces marqueurs ont leurs explications après, dans les « remarques, » pour mieux voir leur fonction dans le texte. \cl Chapitre \ca 2\ca* 
+\rem cl = Pour citer « Chapitre » avant chaque chapitre {NBJ : toutes les Psaumes} 
+\rem c = Numéro de Chapitre 
+\rem ca = Numéro de Chapitre alternatif – si on indique les versifications qui diffèrent {NBJ : SIR 31-36} \cd Description court de contenu du chapitre 
+\p 
+\v 1 \va 2\va* {NET : GEN 31.55} 
+\rem v = Numéro de verset 
+\rem va = Numéro de verset alternatif – si on indique les versifications qui diffèrent 
+\rem \vp Caractère alternatif du verset\vp* {GNT : ESG 1.18-39} \mt 6 Paragraphes 
+\p Paragraphe normale 
+\m Paragraphe aligné à la marge gauche {TOB : GEN 1.27, MAT 11.23} \pmo Introduction à texte inséré, comme une lettre \pm Texte inséré dans une paragraphe, comme une lettre {NIV : DEU 27.14-26} \pmc Conclusion du texte inséré, comme une lettre \pmr Réponse à texte inséré {NIV : DEU 27.15-26} \pi (#) Paragraphe renfoncé {NBS : REV 21.3} 
+\mi Paragraphe renfoncé aligné à la marge gauche {KJVA : REV 5.12-13, 7.10-12, 11.15-17} 
+\nb Au commencement d'un nouveau chapitre quand il n'y a pas de changement de paragraphe {NBJ : NUM 26.0, NEH 8.0} \cls Texte de clôture d'une épître \li (#) Elément d'une liste {PDV : GEN 2.1} \pc Paragraphe centrée {NIV : DAN 5.25, REV 17.5, 19.6} 
+\b [Ligne vierge – aucune texte après ce marqueur] {TOB : NUM 23.18} \mt 7 Poésie \q (#) Ligne de poésie {TOB : PS 107.7, REV 4.8} \qr Ligne de poésie aligné à la marge droit {NIV : PSA 136} 
+\qc Ligne de poésie centrée \qs Pour indiquer « Selah » {TOB : PSA 3.3}\qs* 
+\qa Entête d'acrostiche (Aleph, Beth, etc) {TOB : PSA 119} \q [] \qac Marquer acrostiche en ligne\qac* {NET : PS 119.0,8,16} \qm (#) Ligne de poésie indenté \mt 8 Tableaux 
+\rem « tr » indique le commencement d'une ligne du tableau {PDV : NUM 1.20, NBJ : REV 1.0, GNT : BAK 1.1} 
+\tr \th1 (#) Entête pour la colonne du tableau (le chiffre indique le numéro de la colonne) \thr2 (#) Entête pour la colonne du tableau aligné à droit (le chiffre indique le numéro de la colonne) 
+\tr \tc1 (#) Cellule du tableau (le chiffre indique le numéro de la colonne) \tcr2 (#) Cellule du tableau aligné à droit (le chiffre indique le numéro de la colonne) \mt 9 Notes en bas de page 
+\rem Ces marqueurs ont leurs explications dans les « remarques, » sans les vrais fonctions, comme ceux-ci sont « cachées » dans le texte. {PDV : GEN 2.11} 
+\rem f = Le contenu du note en bas de page, terminer par f* 
+\rem fe = Note à la fin du chapitre, au lieu d'en bas de chaque page, terminer par fe* 
+\rem fr = Référence de la note – en forme de CH.VV {PDV : GEN 2.11} 
+\rem fk = Mot clé qui est le sujet de la note {GNT : GEN 2.4, MAT 8.2} 
+\rem fq = Citation du texte (plus qu'un mot) qui est le sujet de la note {PDV : GEN 2.11} 
+\rem fqa = Traduction alternatif {NBS : 1JN 2.10, REV 19.2} 
+\rem fl = Pour marquer texte utilisé fréquemment dans le même contexte {KJVA : GEN 2.23, JHN 1.41} 
+\rem fp = Pour indiquer un nouveau paragraphe dans une note {NET : GEN 1.1, MAT 1.16} 
+\rem fv = Verset de la note {FCL : EXO 34.6, JHN 3.31} 
+\rem ft = Texte de la note {FCL : GEN 1.1} \mt 10 Références croisées {RSV, KJVA, GNT, CEV} 
+\rem Ces marqueurs ont leurs explications dans les « remarques, » sans les vrais fonctions, comme ceux-ci sont « cachées » dans le texte. 
+\rem x = Le contenu de la référence croisée, terminer par x* {KJVA : GEN 1.3, MAT 1.11} 
+\rem xo = Référence d'origine – en forme de CH.VV {KJVA : GEN 1.3, MAT 1.11} 
+\rem xk = Mot clé qui est le sujet de la référence croisée {RSV : ACT 17.28, 1CO 15.33} 
+\rem xq = Citation du texte qui à lien avec la référence croisée 
+\rem xt = Référence(s) ciblée(s) – en forme de LIV CH.VV ; LIV CH.VV ; etc. {KJVA : GEN 1.3, MAT 1.11} 
+\rem xot = Référence(s) ciblée(s) dans l'Ancien Testament, terminer par xot* 
+\rem xnt = Référence(s) ciblée(s) dans le Nouveau Testament, terminer par xnt* 
+\mt1 11 Texte Spéciale et Style de Caractère 
+\mt2 Texte Spéciale 
+\p [] \add Mots dans le texte ajouter par le traducteur \add* {KJVA : GEN 1.2, MAT 1.6} 
+\p [] \bk Titre du livre biblique cite dans un texte \bk* {TOB : SNG 1.0} 
+\p [] \k Mot clé \k* {KJVA : GLO 1.0} 
+\p [] \nd Un nom de Dieu \nd* {TOB : GEN 2.4} 
+\p [] \ord Nombre ordinal \ord* {TOB : EXO 1.0, MAT 1.0} 
+\p [] \pn Nom propre \pn* {FCL : 2SA 23.8} 
+\p [] \qt Citation \qt* {TOB : 2CO 6.2} 
+\p [] \s1ig Signature d'auteur d'une épître \s1ig* {GNT : 1CO 16.21, COL 4.18, 2TH 3.17} 
+\p [] \s1ls Source de texte secondaire \s1ls* {NBS : EZR 4.8, DAN 2.4} 
+\p [] \tl Translitération de la langue originaire \tl* {NBJ : ISA 28.10} 
+\p [] \wj Paroles de Jésus \wj* 
+\mt2 Style de Caractère 
+\p [] \em Emphase du texte \em* {TOB : SNG 1.0} 
+\p [] Caractères gras {PDV : GEN 1.0, MAT 1.0} 
+\p [] \it Caractères italiques \it* {NBJ : ISA 65.25, MAT 1.23} 
+\p [] \bdit Caractères gras et italiques\bdit* {NBS : ISA 23.1, MAT 1.17} 
+\p [] \no Texte normal dans un paragraphe de texte d'un autre style \no* {FCL : GEN 1.0, MAT 1.0} 
+\p [] \s1c Texte en petits majuscules \s1c* {PDV : EXO 3.14} 
+\mt2 Espacement 
+\rem Espace qui ne divise pas {NET : JOB 5.21} 
+\rem // Endroit facultatif pour une nouvelle ligne {NBJ : EXO 23.19, MAT 11.24} \pb Division pour une nouvelle page 
+\mt2 Traits Spéciales 
+\p [] \ndx Pour indiquer des mots qui sont dans l'indexe \ndx* 
+\p [] \w Pour indiquer des mots qui sont dans le glossaire \w* {PDV : GEN 1.22, MAT 1.16} 
+\p [] \wg Pour indiquer des mots qui sont dans la liste des mots Grec \wg* {FCL : GEN 1.22, MAT 1.5} 
+\p [] \wh Pour indiquer des mots qui sont dans la liste des mots Hébreu \wh* {FCL : MAT 2.23} 
+\p [] \fig Pour illustrations : ‹ DESC|DOS|TAIL|LOC|DROIT|LEG|REF>\fig* 
+\rem DESC = Description d'image (facultatif) 
+\rem DOS = Nom du dossier d'image 
+\rem TAIL = « col » si l'image est dans une colonne, « span » si l'image traverse les deux colonnes 
+\rem LOC = La gamme des versets où l'image peut être insérée (facultatif) 
+\rem DROIT = Le droit d'auteur de l'image (facultatif) 
+\rem LEG = Légende pour l'image 
+\rem REF = Référence pour l'image 

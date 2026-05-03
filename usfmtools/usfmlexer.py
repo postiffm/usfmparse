@@ -35,27 +35,27 @@ KNOWN_MARKERS = {
     # Identification
     'id', 'rem', 'h', 'toc1', 'toc2', 'toc3',
     # Titles
-    'mt', 'mt1', 'mt2', 'mt3', 'ms', 'imt1', 'imt2',
+    'mt', 'mt1', 'mt2', 'mt3', 'ms', 'imt', 'imt1', 'imt2', 'imt3', 'imt4', 'imte', 'mte',
     # Introductions
-    'is', 'ip', 'ipr', 'im', 'imq', 'iot', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
+    'is', 'is1', 'is2', 'ip', 'ipr', 'im', 'imi', 'ipi', 'imq', 'iot', 'io', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili', 'ipq', 'iq', 'ib', 'iex', 'iqt',
     # Headings
-    's', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa',
+    's', 's1', 's2', 's3', 's1r', 's1p', 'r', 'mr', 'd', 'qa',
     # Chapter and Verse
-    'c', 'v',
+    'c', 'v', 'ca', 'va', 'vp',
     # Paragraphs
-    'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'qd',
+    'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'pm', 'pmc', 'pmr', 'cls', 'pc', 'qd',
     # Poetry
-    'q', 'q1', 'q2', 'q3', 'q4', 'qr', 'qc', 'qs',
+    'q', 'q1', 'q2', 'q3', 'q4', 'qr', 'qc', 'qs', 'qac', 'qm',
     # Lists
     'li', 'li1', 'li2',
     # Footnotes
-    'f', 'fr', 'fk', 'ft', 'fw', 'fp',
+    'f', 'fr', 'fk', 'ft', '+ft', 'fw', 'fp', 'fq', 'fe',
     # Cross-references
     'x', 'xo', 'xt', '+xt',
     # Character styles
     # There should be a better way to handle "+" nested markers
-    'w', 'nd', 'add', 'qt', 'tl', 'rq', 'k', 'zhash',
-    '+w', '+nd', '+add', '+qt', '+tl', '+rq', '+k', '+zhash',
+    'w', 'nd', 'add', 'qt', 'tl', 'rq', 'k', 'zhash', 'bk', 'ord', 'pn', 'wj', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh',
+    '+w', '+nd', '+add', '+qt', '+tl', '+rq', '+k', '+zhash', '+bk', '+ord', '+pn', '+wj', '+s1ig', '+s1ls', '+s1c', '+ndx', '+wg', '+wh',
     'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup',
     '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup',
     # Tables
@@ -63,6 +63,8 @@ KNOWN_MARKERS = {
     'thr1', 'thr2', 'thr3', 'thr4', 'thr5',
     'tc1', 'tc2', 'tc3', 'tc4', 'tc5',
     'tcr1', 'tcr2', 'tcr3', 'tcr4', 'tcr5',
+    # Figures
+    'fig',
     # Special
     'periph',
 }
@@ -114,6 +116,21 @@ def tokenize(text: str, filename: str = '') -> List[UsfmToken]:
         
         word = text[word_start:pos]
         
+        # If the word starts with '\rem', it's a comment line.
+        if word == r'\rem' or word.startswith(r'\rem'):
+            tokens.append(UsfmToken(type=TOKEN_MARKER, value='rem', line=line_num))
+            
+            # Consume everything until newline as text
+            remainder = word[4:]
+            text_start = pos
+            while pos < len(text) and text[pos] != '\n':
+                pos += 1
+                
+            comment_text = remainder + text[text_start:pos]
+            if comment_text.strip():
+                tokens.append(UsfmToken(type=TOKEN_TEXT, value=comment_text.strip(), line=line_num))
+            continue
+            
         # Process the word to extract embedded markers
         tokens.extend(_tokenize_word(word, line_num, filename))
     #print(tokens)

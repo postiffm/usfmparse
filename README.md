@@ -351,3 +351,11 @@ In usfmToAccordanceTests/test28.usfm, the parser complains about the \s1 marker 
 ### Bug 10
 Various markers are not processed correctly by the code. For example: \im, \+xt, \+xt*. There is also a custom marker \zhash and \zhash* used in one input data set that we must handle also. Regarding the markers that start with a + sign in front of the marker, that means that the marker is nested within another marker. These are so-called "inline" markers for character styles, or cross-references, etc. 
 usfmToAccordanceTests/test30.usfm and the integration suite demonstrate the errors. The output once again should be error free, and the parser needs to be updated to parse these markers and include them in the AST.
+
+### Bug 11
+test31.usfm and test32.usfm show examples of more markers that we need to support. \imt1, \imi, \ib, \is1, \fdc, \fq, \fig, \fig*, \bk, \bk*, \iqt, \iqt*. All of these must be supported. Markers in a \rem line should never be consumed as markers. The \rem changes the entire line to a comment which should be consumed as plain text and all with the \rem in the AST. A \rem line may even contain a marker that is not supported, but that is fine since it is in a comment (\rem is short for \remark, a comment line).
+
+There are many markers in test33.usfm that should be supported. I will not list them here, but you will see them when you run the test_integration_suite.py with test31, test32, and test33.
+
+### Bug 12
+More markers need to be supported: \imt3, \imt4, \fe, \fe*. See test34 and test35 in usfmToAccordanceTests/ and test_integration_suite.py.
