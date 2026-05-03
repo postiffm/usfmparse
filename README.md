@@ -367,4 +367,9 @@ More markers need to be supported: \ms1, \ms2, \zpa-xb, \zpa-xc, \zpa-xv and the
 Can you explain why test37.usfm fails with a message about an unexpected \rq marker? Visual inspection of the input file does not show why there must be a failure. It may be because you are expecting an ending marker \qt*, but that is not absolutely required by a loose interpretation of the language. Ideally every input file would have a \qt* to end every \qt opening marker, but that is not how people use USFM. I think the idea is that if a line ends, then the \qt is implicitly closed.
 
 ### Bug 15
-Extra text on an \id line until the end of that line should not issue any warning or error message. It should not appear in the AccordanceWalker output. Treat it as a comment include as extra information in the id marker in the AST. See test38.usfm.
+Extra text on an \id line until the end of that line should not issue any warning or error message. It should not appear in the AccordanceWalker output. Treat it as a comment include as extra information in the id marker in the AST. See usfmToAccordanceTests/test38.usfm and the test integration suite.
+
+### Bug 16
+Why is it that when I run 
+cd usfmToAccordanceTests ; python3 -m usfmtools.usfmToAccordance test39.usfm test40.usfm  > test39.acc 2>&1
+that the AccordanceWalker outputs the string "Warning: Unknown Unknown" twice as well as several messages about "Skipping:" It only happens when I process the two files together, not separate, and I cannot figure out how to shorten the second file while still retaining the error. I need help identifying the bug and shortening test39.usfm and test40.usfm

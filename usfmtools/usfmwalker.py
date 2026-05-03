@@ -108,7 +108,7 @@ class UsfmWalker:
 
     def visit_unknown(self, node: Unknown) -> str:
         """Render Unknown AST node."""
-        print(f"Warning: Unknown {node.__class__.__name__}", file=sys.stderr)
+        print(f"Warning: Unknown {node.__class__.__name__} (\\{node.marker}) at line {node.line}", file=sys.stderr)
         return ''.join(self.render(child) for child in node.children)
 
 
@@ -166,6 +166,10 @@ class AccordanceWalker(UsfmWalker):
         self.para = para
         self.tc = tc
         self.separate_quotes = separate_quotes
+        self.reset()
+
+    def reset(self):
+        """Reset walker state for a new file/book."""
         self.first_verse = True
         self.pending_paragraph = False
         self.current_book = None

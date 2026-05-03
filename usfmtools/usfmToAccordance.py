@@ -68,6 +68,9 @@ def main(para: bool, tc: bool, debug: bool, separate_quotes: bool,
             # Parse the USFM file
             document = parser.load(filename)
             
+            # Reset walker state for each file
+            walker.reset()
+            
             # Render to Accordance format
             output = walker.render(document)
             

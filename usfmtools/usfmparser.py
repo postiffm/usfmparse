@@ -124,6 +124,7 @@ class Text(UsfmNode):
 class Unknown(UsfmNode):
     """Unknown marker - content preserved with warning."""
     marker: str
+    line: int = 0
     children: List[UsfmNode] = field(default_factory=list)
 
 
@@ -563,7 +564,7 @@ class UsfmParser:
             else:
                 # Unknown inline marker
                 self._advance()
-                return Unknown(marker=marker)
+                return Unknown(marker=marker, line=token.line)
 
         elif token.type == TOKEN_MARKER_END:
             # End marker without matching start - skip
@@ -697,23 +698,20 @@ class UsfmParser:
                 span.children.append(Text(value=self._advance().value))
 
             elif token.type == TOKEN_MARKER:
-                marker = token.value
+                inner_marker = token.value
                 line = token.line if token else 'EOF'
-                # MAP: The following is very similar to code in parse_inline_content and is candidate for refactoring
-                if marker == 'w' or marker == "+w":
+                if inner_marker == 'w' or inner_marker == "+w":
                     span.children.append(self._parse_glossary_word())
-                elif marker in ('f', 'fe'):
-                    # Technically footnotes are not supposed to be inside of \add statements, for example
-                    # but we are being lenient.
+                elif inner_marker in ('f', 'fe'):
                     span.children.append(self._parse_footnote())
-                elif marker == 'x':
+                elif inner_marker == 'x':
                     span.children.append(self._parse_crossref())
-                elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or marker.startswith('z') or marker.startswith('+z'):
+                elif inner_marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or inner_marker.startswith('z') or inner_marker.startswith('+z'):
                     span.children.append(self._parse_inline_span())
                 else:
                     # Unknown inline marker
                     self._advance()
-                    span.children.append(Unknown(marker=marker))
+                    span.children.append(Unknown(marker=inner_marker, line=token.line))
 
             else:
                 self._advance()
