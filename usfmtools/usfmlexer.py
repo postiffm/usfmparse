@@ -35,7 +35,7 @@ KNOWN_MARKERS = {
     # Identification
     'id', 'rem', 'h', 'toc1', 'toc2', 'toc3',
     # Titles
-    'mt', 'mt1', 'mt2', 'mt3', 'ms', 'ms1', 'ms2', 'imt', 'imt1', 'imt2', 'imt3', 'imt4', 'imte', 'mte',
+    'mt', 'mt1', 'mt2', 'mt3', 'ms', 'ms1', 'ms2', 'imt', 'imt1', 'imt2', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cp',
     # Introductions
     'is', 'is1', 'is2', 'ip', 'ipr', 'im', 'imi', 'ipi', 'imq', 'iot', 'io', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili', 'ipq', 'iq', 'ib', 'iex', 'iqt',
     # Headings
@@ -43,13 +43,13 @@ KNOWN_MARKERS = {
     # Chapter and Verse
     'c', 'v', 'ca', 'va', 'vp',
     # Paragraphs
-    'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'pm', 'pmc', 'pmr', 'cls', 'pc', 'qd',
+    'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi1', 'pi2', 'pmo', 'pm', 'pmc', 'pmr', 'cls', 'pc', 'qd', 'sp', 'pb',
     # Poetry
     'q', 'q1', 'q2', 'q3', 'q4', 'qr', 'qc', 'qs', 'qac', 'qm',
     # Lists
     'li', 'li1', 'li2',
     # Footnotes
-    'f', 'fr', 'fk', 'ft', '+ft', 'fw', 'fp', 'fq', 'fe', 'fdc',
+    'f', 'fr', 'fk', 'ft', '+ft', 'fw', 'fp', 'fq', 'fqa', 'fl', 'fe', 'fdc',
     # Cross-references
     'x', 'xo', 'xt', '+xt',
     # Character styles

@@ -240,14 +240,18 @@ class AccordanceWalker(UsfmWalker):
 
     def visit_paragraph(self, node: Paragraph) -> str:
         """Mark that next verse should have paragraph marker."""
-        if node.marker != 'p':
+        if node.marker.startswith('i'):
             return ''
-        if getattr(self, 'in_verse', False):
-            if self.para:
-                return ' ¶'
-            return ''
-        self.pending_paragraph = True
-        return ''.join(self.render(child) for child in node.children)
+            
+        res = ''
+        if node.marker == 'p':
+            if getattr(self, 'in_verse', False):
+                if self.para:
+                    res = ' ¶'
+            else:
+                self.pending_paragraph = True
+        
+        return res + ''.join(self.render(child) for child in node.children)
 
     def visit_table(self, node: Table) -> str:
         """Accordance does not support tables. Output nothing."""

@@ -258,20 +258,20 @@ class UsfmParser:
 
     # Paragraph-style markers valid at book level (front-matter, introductions)
     BOOK_LEVEL_PARAGRAPH_MARKERS = {
-        'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'qd',
+        'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi1', 'pi2', 'pmo', 'qd',
         'q', 'q1', 'q2', 'q3', 'q4', 'qr', 'qc', 'qs',
         'li', 'li1', 'li2',
         # Intro paragraphs
         'ip', 'ipr', 'im', 'imq', 'iot', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili',
         'ib', 'imi', 'ipi', 'ipq', 'iq', 'io', 'iex',
-        'pm', 'pmc', 'pmr', 'cls', 'pc', 'qm', 'pb',
+        'pm', 'pmc', 'pmr', 'cls', 'pc', 'qm', 'pb', 'sp',
     }
 
     # Heading-style markers valid at book level
     BOOK_LEVEL_HEADING_MARKERS = {
         'h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms', 'ms1', 'ms2',
         # We need to check on \s1r and \s1p. I believe these are errant markers
-        'imt1', 'imt2', 'imt', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cd', 's1r', 's1p',
+        'imt1', 'imt2', 'imt', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cp', 'cd', 's1r', 's1p',
         # Section headings
         's', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa',
         # Front-matter / introduction headings
@@ -701,10 +701,11 @@ class UsfmParser:
                 break
 
             # Safety check to avoid swallowing entire document if span is unclosed
-            if token.type == TOKEN_MARKER and token.value in (
-                'c', 'v', 'p', 'p1', 'p2', 'm', 'm1', 'm2', 'q', 'q1', 'q2', 'q3', 'q4', 
-                's', 's1', 's2', 's3', 'b', 'nb', 'tr', 'tc1', 'tc2', 'tc3', 'r', 'mr', 
-                'ms', 'ms1', 'ms2', 'd', 'sp', 'li', 'li1', 'li2', 'li3'
+            if token.type == TOKEN_MARKER and (
+                token.value in self.BOOK_LEVEL_PARAGRAPH_MARKERS or
+                token.value in self.BOOK_LEVEL_HEADING_MARKERS or
+                token.value in self.TABLE_MARKERS or
+                token.value in ('c', 'v', 'id')
             ):
                 break
 

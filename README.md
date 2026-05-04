@@ -397,3 +397,23 @@ The previous fix for test45 and 46 added a \n to the output. This caused some of
 
 ### Bug 24
 test47.usfm has two \+rq markers, ach followed by a \+rq* closing marker. These happen to be nested inside a \qt and \qt* pair, but that is not important in this case. The point is that the parser is emitting "Unkown Unknown" for the \+rq markers. Furthermore, it is output the contents of the \+rq which is not what the AccordanceWalker is designed to do.
+
+## Bug 25
+A number of times I have seen strange output from pytest that indicates there are some warnings, perhaps on stderr, that I have not been aware of. I need to know that those errors and warnings are reported and observed by the test harness. 
+
+### Bug 26 
+test48.usfm demonstrate a number of other markers that need to be supported. They are in the following error messages:
+Warning: Unknown marker '\cl' at line 2 in test48.usfm
+Warning: Unknown marker '\cp' at line 4 in test48.usfm
+Warning: Unknown marker '\pi1' at line 5 in test48.usfm
+Warning: Unknown marker '\sp' at line 7 in test48.usfm
+Warning: Unknown marker '\fqa' at line 9 in test48.usfm
+Warning: Unknown marker '\fl' at line 10 in test48.usfm
+Warning: Unknown marker '\fl' at line 10 in test48.usfm
+Warning: Unknown marker '\fl' at line 10 in test48.usfm
+Warning: Unknown Unknown (\sp) at line 7
+
+### Bug 27
+I added another marker, \pb, to test48.usfm. Can you change the code so that it now accepts it? I ran the parser, but it still tells me that it is an unknown marker. It should be accepted.
+
+I have somehow messed up test48. It is not passing, because of a problem with paragraph characters. Can you help me figure out what I have done wrong?
