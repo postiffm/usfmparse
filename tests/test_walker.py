@@ -35,7 +35,7 @@ class TestAccordanceWalkerVerseFormat:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 In the beginning'
+        assert result == 'Matt. 1:1 In the beginning\n'
     
     def test_multiple_verses_with_newlines(self):
         """Test that multiple verses are separated by newlines"""
@@ -51,7 +51,7 @@ class TestAccordanceWalkerVerseFormat:
         ])
         
         result = walker.render(doc)
-        assert result == 'Gen. 1:1 First\nGen. 1:2 Second'
+        assert result == 'Gen. 1:1 First\nGen. 1:2 Second\n'
     
     def test_book_name_mapping(self):
         """Test that book IDs are correctly mapped to canonical names"""
@@ -95,7 +95,7 @@ class TestAccordanceWalkerParagraphMarker:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 ¶ text'
+        assert result == 'Matt. 1:1 ¶ text\n'
     
     def test_paragraph_marker_with_para_false(self):
         """Test that ¶ does not appear when para=False"""
@@ -111,7 +111,7 @@ class TestAccordanceWalkerParagraphMarker:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 text'
+        assert result == 'Matt. 1:1 text\n'
         assert '¶' not in result
     
     def test_paragraph_marker_only_on_following_verse(self):
@@ -129,7 +129,7 @@ class TestAccordanceWalkerParagraphMarker:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 ¶ first\nMatt. 1:2 second'
+        assert result == 'Matt. 1:1 ¶ first\nMatt. 1:2 second\n'
     
     def test_multiple_paragraph_markers(self):
         """Test multiple paragraph markers throughout the text"""
@@ -147,7 +147,7 @@ class TestAccordanceWalkerParagraphMarker:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 ¶ first\nMatt. 1:2 ¶ second'
+        assert result == 'Matt. 1:1 ¶ first\nMatt. 1:2 ¶ second\n'
 
 
 class TestAccordanceWalkerTextCriticalMarks:
@@ -175,7 +175,7 @@ class TestAccordanceWalkerTextCriticalMarks:
         assert '⸂' in result
         assert '⸃' in result
         # Note: text-critical marks get spaces added like regular text
-        assert result == 'Matt. 1:1 before ⸂ critical ⸃ after'
+        assert result == 'Matt. 1:1 before ⸂ critical ⸃ after\n'
     
     def test_text_critical_marks_with_tc_false(self):
         """Test that ⸂ and ⸃ are suppressed when tc=False"""
@@ -198,7 +198,7 @@ class TestAccordanceWalkerTextCriticalMarks:
         result = walker.render(doc)
         assert '⸂' not in result
         assert '⸃' not in result
-        assert result == 'Matt. 1:1 before critical after'
+        assert result == 'Matt. 1:1 before critical after\n'
     
     def test_only_text_critical_marks_suppressed(self):
         """Test that only ⸂ and ⸃ are suppressed, not other Unicode"""
@@ -251,7 +251,7 @@ class TestAccordanceWalkerFootnoteAndCrossRef:
         result = walker.render(doc)
         assert 'footnote' not in result
         assert 'content' not in result
-        assert result == 'Matt. 1:1 before after'
+        assert result == 'Matt. 1:1 before after\n'
     
     def test_cross_references_are_filtered(self):
         """Test that cross-reference content does not appear in output"""
@@ -275,7 +275,7 @@ class TestAccordanceWalkerFootnoteAndCrossRef:
         result = walker.render(doc)
         assert 'cross' not in result
         assert 'reference' not in result
-        assert result == 'Matt. 1:1 before after'
+        assert result == 'Matt. 1:1 before after\n'
     
     def test_multiple_footnotes_and_crossrefs(self):
         """Test that multiple footnotes and cross-refs are all filtered"""
@@ -298,7 +298,7 @@ class TestAccordanceWalkerFootnoteAndCrossRef:
         result = walker.render(doc)
         assert 'fn1' not in result
         assert 'xr1' not in result
-        assert result == 'Matt. 1:1 text more end'
+        assert result == 'Matt. 1:1 text more end\n'
 
 
 class TestAccordanceWalkerGlossaryWord:
@@ -321,7 +321,7 @@ class TestAccordanceWalkerGlossaryWord:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 before glossary after'
+        assert result == 'Matt. 1:1 before glossary after\n'
     
     def test_glossary_word_with_punctuation(self):
         """Test that glossary words starting with punctuation have no leading space"""
@@ -340,7 +340,7 @@ class TestAccordanceWalkerGlossaryWord:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 word, next'
+        assert result == 'Matt. 1:1 word, next\n'
 
 
 class TestAccordanceWalkerPunctuationSpacing:
@@ -362,7 +362,7 @@ class TestAccordanceWalkerPunctuationSpacing:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 word.'
+        assert result == 'Matt. 1:1 word.\n'
     
     def test_no_space_before_comma(self):
         """Test that commas have no leading space"""
@@ -381,7 +381,7 @@ class TestAccordanceWalkerPunctuationSpacing:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 word, next'
+        assert result == 'Matt. 1:1 word, next\n'
     
     def test_no_space_before_all_punctuation(self):
         """Test that all punctuation marks have no leading space"""
@@ -402,7 +402,7 @@ class TestAccordanceWalkerPunctuationSpacing:
             ])
             
             result = walker.render(doc)
-            assert result == f'Matt. 1:1 word{punct}'
+            assert result == f'Matt. 1:1 word{punct}\n'
     
     def test_space_before_regular_words(self):
         """Test that regular words have leading space"""
@@ -421,7 +421,7 @@ class TestAccordanceWalkerPunctuationSpacing:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 1:1 first second third'
+        assert result == 'Matt. 1:1 first second third\n'
 
 
 class TestAccordanceWalkerSkippedBooks:
@@ -501,7 +501,7 @@ class TestAccordanceWalkerSkippedBooks:
         assert 'Matthew' in result
         assert 'Mark' in result
         assert 'glossary' not in result
-        assert result == 'Matt. 1:1 Matthew\nMark 1:1 Mark'
+        assert result == 'Matt. 1:1 Matthew\n\nMark 1:1 Mark\n'
 
 
 class TestAccordanceWalkerIntegration:
@@ -530,7 +530,7 @@ class TestAccordanceWalkerIntegration:
         ])
         
         result = walker.render(doc)
-        assert result == 'Matt. 5:3 ¶ Blessed are the poor, for theirs.'
+        assert result == 'Matt. 5:3 ¶ Blessed are the poor, for theirs.\n'
     
     def test_headings_are_discarded(self):
         """Test that heading nodes don't appear in output"""
@@ -547,7 +547,7 @@ class TestAccordanceWalkerIntegration:
         
         result = walker.render(doc)
         assert 'Section Heading' not in result
-        assert result == 'Matt. 1:1 verse'
+        assert result == 'Matt. 1:1 verse\n'
 
 
 

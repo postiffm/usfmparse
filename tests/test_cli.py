@@ -359,7 +359,7 @@ class TestRealWorldFiles:
         assert returncode == 0
         # test1.usfm is a fragment without book/chapter/verse structure
         # so output should be empty
-        assert stdout == "Ezek. 19:1 dem Messias,"
+        assert stdout == "Ezek. 19:1 dem Messias,\n"
     
     @pytest.mark.skipif(not Path("usfmToAccordanceTests/test3.usfm").exists(),
                        reason="test3.usfm not found")

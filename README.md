@@ -392,3 +392,8 @@ Modify tests/test_integration_suite.py to allow parse_and_render to be called on
 ### Bug 22
 When test45.usfm and test46.usfm are run together, the contents of test46.usfm appear on the same output line with the contents of test45.usfm. This is incorrect. When a new book is started, it must start on its own new line. This is a simpler version of the bug that happened when running test39 and test40 together (Bug 16 above). It appears that the state from the first file is carrying over instead of being fully reset. This is likely related to unclosed markers in one book causing errors in a following book.
 
+### Bug 23
+The previous fix for test45 and 46 added a \n to the output. This caused some of the pytest tests to fail. Can you fix those so that pytest now expects to see that extra newline at the end of the output? There is one failure in pytest tests/test_cli.py and many failures in tests/test_walker.py.
+
+### Bug 24
+test47.usfm has two \+rq markers, ach followed by a \+rq* closing marker. These happen to be nested inside a \qt and \qt* pair, but that is not important in this case. The point is that the parser is emitting "Unkown Unknown" for the \+rq markers. Furthermore, it is output the contents of the \+rq which is not what the AccordanceWalker is designed to do.

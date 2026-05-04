@@ -346,7 +346,7 @@ class AccordanceWalker(UsfmWalker):
     
     def visit_inlinespan(self, node: InlineSpan) -> str:
         """Render inline span, skipping any footnote or crossref children."""
-        if node.marker in ('fig', 'rq'):
+        if node.marker in ('fig', 'rq', '+rq'):
             return ''
             
         # test15.usfm has this example:

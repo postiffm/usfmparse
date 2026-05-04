@@ -361,7 +361,7 @@ class UsfmParser:
                     self._advance()
                     while self._current_token() and self._current_token().line == rem_line:
                         self._advance()
-                elif token.value in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup', 'w', '+w', 'f', 'fe', 'x', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or token.value.startswith('z') or token.value.startswith('+z'):
+                elif token.value in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', '+rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup', 'w', '+w', 'f', 'fe', 'x', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or token.value.startswith('z') or token.value.startswith('+z'):
                     # Inline marker directly at book level
                     node = self._parse_inline_content()
                     if node:
@@ -566,7 +566,7 @@ class UsfmParser:
                 return self._parse_footnote()
             elif marker == 'x':
                 return self._parse_crossref()
-            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or marker.startswith('z') or marker.startswith('+z'):
+            elif marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', '+rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or marker.startswith('z') or marker.startswith('+z'):
                 return self._parse_inline_span()
             # Character styling (strongly discouraged)
             elif marker in ('em', 'bd', 'it', 'bdit', 'no', 'sc', 'sup', '+em', '+bd', '+it', '+bdit', '+no', '+sc', '+sup'):
@@ -720,7 +720,7 @@ class UsfmParser:
                     span.children.append(self._parse_footnote())
                 elif inner_marker == 'x':
                     span.children.append(self._parse_crossref())
-                elif inner_marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or inner_marker.startswith('z') or inner_marker.startswith('+z'):
+                elif inner_marker in ('nd', 'add', 'qt', 'tl', '+tl', 'wj', '+wj', 'rq', '+rq', 'k', 'xt', '+xt', 'zhash', '+zhash', 'ca', 'va', 'vp', 'qac', 'bk', 'ord', 'pn', 's1ig', 's1ls', 's1c', 'ndx', 'wg', 'wh', 'iqt', 'fig', 't') or inner_marker.startswith('z') or inner_marker.startswith('+z'):
                     span.children.append(self._parse_inline_span())
                 else:
                     # Unknown inline marker
