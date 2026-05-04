@@ -271,7 +271,7 @@ class UsfmParser:
     BOOK_LEVEL_HEADING_MARKERS = {
         'h', 'toc1', 'toc2', 'toc3', 'mt', 'mt1', 'mt2', 'mt3', 'ms', 'ms1', 'ms2',
         # We need to check on \s1r and \s1p. I believe these are errant markers
-        'imt1', 'imt2', 'imt', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cp', 'cd', 's1r', 's1p',
+        'imt1', 'imt2', 'imt', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cp', 'cd', 'ide', 's1r', 's1p',
         # Section headings
         's', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa',
         # Front-matter / introduction headings

@@ -37,7 +37,7 @@ KNOWN_MARKERS = {
     # Titles
     'mt', 'mt1', 'mt2', 'mt3', 'ms', 'ms1', 'ms2', 'imt', 'imt1', 'imt2', 'imt3', 'imt4', 'imte', 'mte', 'cl', 'cp',
     # Introductions
-    'is', 'is1', 'is2', 'ip', 'ipr', 'im', 'imi', 'ipi', 'imq', 'iot', 'io', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili', 'ipq', 'iq', 'ib', 'iex', 'iqt',
+    'is', 'is1', 'is2', 'ip', 'ipr', 'im', 'imi', 'ipi', 'imq', 'iot', 'io', 'io1', 'io2', 'io3', 'ior', 'ie', 'ili', 'ipq', 'iq', 'ib', 'iex', 'iqt', 'ide',
     # Headings
     's', 's1', 's2', 's3', 's1r', 's1p', 'r', 'mr', 'd', 'qa',
     # Chapter and Verse
@@ -117,7 +117,7 @@ def tokenize(text: str, filename: str = '') -> List[UsfmToken]:
         word = text[word_start:pos]
         
         # If the word starts with '\rem', it's a comment line.
-        if word == r'\rem' or word.startswith(r'\rem'):
+        if word == r'\rem':
             tokens.append(UsfmToken(type=TOKEN_MARKER, value='rem', line=line_num))
             
             # Consume everything until newline as text
@@ -132,7 +132,7 @@ def tokenize(text: str, filename: str = '') -> List[UsfmToken]:
             continue
             
         # If the word starts with '\id', it's the book ID line.
-        if word == r'\id' or word.startswith(r'\id'):
+        if word == r'\id':
             tokens.append(UsfmToken(type=TOKEN_MARKER, value='id', line=line_num))
             
             # Consume everything until newline as text

@@ -417,3 +417,6 @@ Warning: Unknown Unknown (\sp) at line 7
 I added another marker, \pb, to test48.usfm. Can you change the code so that it now accepts it? I ran the parser, but it still tells me that it is an unknown marker. It should be accepted.
 
 I have somehow messed up test48. It is not passing, because of a problem with paragraph characters. Can you help me figure out what I have done wrong?
+
+## Bug 28
+Test49 is failing because the book name is incorrect. It should be 'Gen.' but instead it is 'e'. Can you fix this?

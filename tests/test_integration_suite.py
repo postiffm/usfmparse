@@ -360,6 +360,11 @@ class TestIntegrationSuite:
         actual = parse_and_render(48, para=False)
         expected = read_expected_output(48)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test49_book_name_incorrect(self):
+        """Test 49: Test book name incorrect from test49.usfm."""
+        actual = parse_and_render(49)
+        expected = read_expected_output(49)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""
