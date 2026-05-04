@@ -184,7 +184,10 @@ class AccordanceWalker(UsfmWalker):
         if node.book_id in self.SKIPPED_BOOKS:
             return ''
         self.current_book = self.BOOK_NAMES.get(node.book_id, node.book_id)
-        return ''.join(self.render(child) for child in node.children)
+        result = ''.join(self.render(child) for child in node.children)
+        if result and not result.endswith('\n'):
+            result += '\n'
+        return result
 
     def visit_chapter(self, node: Chapter) -> str:
         """Render chapter - track chapter number."""

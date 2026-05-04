@@ -10,6 +10,7 @@ Tests 5 and 6 are expected to fail with errors (missing verse numbers).
 
 import pytest
 from pathlib import Path
+from typing import List, Union
 from usfmtools.usfmparser import UsfmParser
 from usfmtools.usfmwalker import AccordanceWalker
 
@@ -43,12 +44,11 @@ def read_expected_output(test_num: int) -> str:
 import sys
 import io
 
-def parse_and_render(test_num: int, para: bool = True, tc: bool = True,
+def parse_and_render(test_nums: Union[int, List[int]], para: bool = True, tc: bool = True,
                      separate_quotes: bool = False) -> str:
-    """Parse USFM file and render to Accordance format."""
-    usfm_file = TEST_DIR / f"test{test_num}.usfm"
-    if not usfm_file.exists():
-        pytest.skip(f"Test file test{test_num}.usfm not found")
+    """Parse USFM file(s) and render to Accordance format."""
+    if isinstance(test_nums, int):
+        test_nums = [test_nums]
     
     # Capture stderr to detect warnings
     stderr_capture = io.StringIO()
@@ -59,15 +59,25 @@ def parse_and_render(test_num: int, para: bool = True, tc: bool = True,
         parser = UsfmParser()
         walker = AccordanceWalker(para=para, tc=tc, separate_quotes=separate_quotes)
         
-        doc = parser.load(str(usfm_file))
-        output = walker.render(doc)
+        results = []
+        for num in test_nums:
+            usfm_file = TEST_DIR / f"test{num}.usfm"
+            if not usfm_file.exists():
+                pytest.skip(f"Test file test{num}.usfm not found")
+            
+            doc = parser.load(str(usfm_file))
+            results.append(walker.render(doc))
+            # Reset walker state between files to avoid leakage
+            walker.reset()
+            
+        output = "".join(results)
     finally:
         sys.stderr = old_stderr
     
     # Check for warnings in stderr
     warnings = stderr_capture.getvalue()
     if "Warning:" in warnings:
-        raise AssertionError(f"Warnings detected in stderr for test{test_num}.usfm:\n{warnings}")
+        raise AssertionError(f"Warnings detected in stderr for test {test_nums}:\n{warnings}")
     
     return normalize_output(output)
 
@@ -310,7 +320,11 @@ class TestIntegrationSuite:
         actual = parse_and_render(38)
         expected = read_expected_output(38)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
-    # Have to run test39.usfm and test40.usfm together to expose the Unknown Unknown and Skipping bug.
+    def test_test39_and40(self):
+        """Test 39 and 40 run together from test39.usfm and test40.usfm."""
+        actual = parse_and_render([39, 40])
+        expected = read_expected_output(39)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
     def test_test41_q1_unknown(self):
         """Test 41: Unknown \q1 marker from test41.usfm."""
         actual = parse_and_render(41)
@@ -330,6 +344,11 @@ class TestIntegrationSuite:
         """Test 44: Test \v outside \c from test44.usfm."""
         actual = parse_and_render(44)
         expected = read_expected_output(44)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test45_and46_booksruntogether(self):
+        """Test 45: Test 45 and 46 run together from test45.usfm and test46.usfm."""
+        actual = parse_and_render([45, 46])
+        expected = read_expected_output(45)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:

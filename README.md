@@ -384,4 +384,11 @@ Fix test42. The present parser or AccordanceWalker prints extra text from the \m
 In tests/test_integration_suite.py, Fix test_test43_fdc so that it recognizes the failure "Unknown marker". Antigravity did a good job at this.
 
 ### Bug 20
-In test44.usfm, there is a \v marker not inside a \c marker (not inside a chapter). For front and back matter books, this is permissible. For Bible books 01Gen to 67Rev this is not permissible.
+In test44.usfm, there is a \v marker not inside a \c marker (not inside a chapter). For front and back matter books, this is something that is done and should be permissible by a relaxed parser. For Bible books 01Gen to 67Rev this is not permissible. I think you can just implement it by permitting a \v not in a \c, but keeping the normal expectation of most \v being in a \c.
+
+### Improvement 21
+Modify tests/test_integration_suite.py to allow parse_and_render to be called on two files at once. I have added test45.usfm and test46.usfm which are meant to be processed together, but the current code does not support that. The output should be for test45 followedand test46 run together, which is a real use case where the user runs usfmtools.usfmToAccordance test45.usfm test46.usfm > test45and46.acc 2>&1. This way we can test the two files together. After this improvement is implemented, I will use this capability with test45 and test46 together to find and fix a bug. For now, just add this capability to test_integration_suite.py.
+
+### Bug 22
+When test45.usfm and test46.usfm are run together, the contents of test46.usfm appear on the same output line with the contents of test45.usfm. This is incorrect. When a new book is started, it must start on its own new line. This is a simpler version of the bug that happened when running test39 and test40 together (Bug 16 above). It appears that the state from the first file is carrying over instead of being fully reset. This is likely related to unclosed markers in one book causing errors in a following book.
+
