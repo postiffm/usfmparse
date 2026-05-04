@@ -251,7 +251,12 @@ class UsfmParser:
 
         return doc
 
-    # Paragraph-style markers valid at book level (front-matter/introductions)
+    # USFM Peripheral book codes where \v outside \c is permitted
+    PERIPHERAL_BOOKS = {
+        'FRT', 'BAK', 'INT', 'CNC', 'GLO', 'TDX', 'NDX', 'OTH'
+    }
+
+    # Paragraph-style markers valid at book level (front-matter, introductions)
     BOOK_LEVEL_PARAGRAPH_MARKERS = {
         'p', 'm', 'mi', 'nb', 'b', 'pi', 'pi2', 'pmo', 'qd',
         'q', 'q1', 'q2', 'q3', 'q4', 'qr', 'qc', 'qs',
@@ -316,10 +321,15 @@ class UsfmParser:
                     chapter = self._parse_chapter()
                     book.children.append(chapter)
                 elif token.value == 'v':
-                    # Verse marker without a chapter — this is an error
-                    raise RuntimeError(
-                        f"{self.filename}:{token.line}: "
-                        f"Verse marker \\v at book level without a preceding \\c (missing chapter?)")
+                    # Verse marker without a chapter — allowed for peripheral books
+                    if book_id.strip().upper() in self.PERIPHERAL_BOOKS:
+                        # Parse as verse and add directly to book
+                        verse = self._parse_verse()
+                        book.children.append(verse)
+                    else:
+                        raise RuntimeError(
+                            f"{self.filename}:{token.line}: "
+                            f"Verse marker \\v at book level without a preceding \\c (missing chapter?) in book {book_id}")
                 elif token.value in self.BOOK_LEVEL_HEADING_MARKERS:
                     # Heading/title markers (including front-matter headings)
                     heading = self._parse_heading()

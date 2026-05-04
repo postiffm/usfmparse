@@ -383,3 +383,5 @@ Fix test42. The present parser or AccordanceWalker prints extra text from the \m
 ### Bug 19
 In tests/test_integration_suite.py, Fix test_test43_fdc so that it recognizes the failure "Unknown marker". Antigravity did a good job at this.
 
+### Bug 20
+In test44.usfm, there is a \v marker not inside a \c marker (not inside a chapter). For front and back matter books, this is permissible. For Bible books 01Gen to 67Rev this is not permissible.

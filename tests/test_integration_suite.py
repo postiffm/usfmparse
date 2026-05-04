@@ -326,6 +326,11 @@ class TestIntegrationSuite:
         actual = parse_and_render(43)
         expected = read_expected_output(43)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test44_v_outside_chapter(self):
+        """Test 44: Test \v outside \c from test44.usfm."""
+        actual = parse_and_render(44)
+        expected = read_expected_output(44)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""
