@@ -40,6 +40,9 @@ def read_expected_output(test_num: int) -> str:
         return normalize_output(f.read())
 
 
+import sys
+import io
+
 def parse_and_render(test_num: int, para: bool = True, tc: bool = True,
                      separate_quotes: bool = False) -> str:
     """Parse USFM file and render to Accordance format."""
@@ -47,11 +50,24 @@ def parse_and_render(test_num: int, para: bool = True, tc: bool = True,
     if not usfm_file.exists():
         pytest.skip(f"Test file test{test_num}.usfm not found")
     
-    parser = UsfmParser()
-    walker = AccordanceWalker(para=para, tc=tc, separate_quotes=separate_quotes)
+    # Capture stderr to detect warnings
+    stderr_capture = io.StringIO()
+    old_stderr = sys.stderr
+    sys.stderr = stderr_capture
     
-    doc = parser.load(str(usfm_file))
-    output = walker.render(doc)
+    try:
+        parser = UsfmParser()
+        walker = AccordanceWalker(para=para, tc=tc, separate_quotes=separate_quotes)
+        
+        doc = parser.load(str(usfm_file))
+        output = walker.render(doc)
+    finally:
+        sys.stderr = old_stderr
+    
+    # Check for warnings in stderr
+    warnings = stderr_capture.getvalue()
+    if "Warning:" in warnings:
+        raise AssertionError(f"Warnings detected in stderr for test{test_num}.usfm:\n{warnings}")
     
     return normalize_output(output)
 
@@ -300,7 +316,16 @@ class TestIntegrationSuite:
         actual = parse_and_render(41)
         expected = read_expected_output(41)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
-
+    def test_test42_ms(self):
+        """Test 42: Test ms marker from test42.usfm."""
+        actual = parse_and_render(42)
+        expected = read_expected_output(42)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test43_fdc(self):
+        """Test 43: Test \fdc marker from test43.usfm."""
+        actual = parse_and_render(43)
+        expected = read_expected_output(43)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""

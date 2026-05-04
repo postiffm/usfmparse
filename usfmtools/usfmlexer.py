@@ -49,7 +49,7 @@ KNOWN_MARKERS = {
     # Lists
     'li', 'li1', 'li2',
     # Footnotes
-    'f', 'fr', 'fk', 'ft', '+ft', 'fw', 'fp', 'fq', 'fe',
+    'f', 'fr', 'fk', 'ft', '+ft', 'fw', 'fp', 'fq', 'fe', 'fdc',
     # Cross-references
     'x', 'xo', 'xt', '+xt',
     # Character styles

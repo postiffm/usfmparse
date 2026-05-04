@@ -376,3 +376,10 @@ that the AccordanceWalker outputs the string "Warning: Unknown Unknown" twice as
 
 ### Bug 17 
 test41.usfm contains a \q1 marker that is not recognized by the USFM parser. This is clearly an error since \q1 is a valid marker. It should be recognized as a marker and included in the AST. This bug can be seen by running `pytest tests/test_integration_suite.py` and looking at the output for `test_test41_q1_unknown`. Unfortunately, the output seems to be missing the warnings, perhaps because they are printed to stderr. The test harness should catch that for us.
+
+### Bug 18
+Fix test42. The present parser or AccordanceWalker prints extra text from the \ms marker (Bu II). The \ms marker is a "major section heading" like an \s1 or \ms1, and the "Bu II" text should not be output. It should be captured in the \ms marker object in case a future walker needs to use it.  As with test41, the test harness should catch any error messages.
+
+### Bug 19
+In tests/test_integration_suite.py, Fix test_test43_fdc so that it recognizes the failure "Unknown marker". Antigravity did a good job at this.
+

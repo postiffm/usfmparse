@@ -440,7 +440,7 @@ class UsfmParser:
                 break
             
             # Stop at section headings (these truly end a verse)
-            if token.type == TOKEN_MARKER and token.value in ('s', 's1', 's2', 's3', 'r', 'mr', 'd', 'qa'):
+            if token.type == TOKEN_MARKER and token.value in ('s', 's1', 's2', 's3', 'ms', 'ms1', 'ms2', 'r', 'mr', 'd', 'qa'):
                 break
 
             # Handle paragraph/poetry markers with lookahead:
