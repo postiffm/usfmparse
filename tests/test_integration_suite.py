@@ -326,7 +326,7 @@ class TestIntegrationSuite:
         expected = read_expected_output(39)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
     def test_test41_q1_unknown(self):
-        """Test 41: Unknown \q1 marker from test41.usfm."""
+        r"""Test 41: Unknown \q1 marker from test41.usfm."""
         actual = parse_and_render(41)
         expected = read_expected_output(41)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
@@ -341,7 +341,7 @@ class TestIntegrationSuite:
         expected = read_expected_output(43)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
     def test_test44_v_outside_chapter(self):
-        """Test 44: Test \v outside \c from test44.usfm."""
+        r"""Test 44: Test \v outside \c from test44.usfm."""
         actual = parse_and_render(44)
         expected = read_expected_output(44)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
@@ -361,9 +361,14 @@ class TestIntegrationSuite:
         expected = read_expected_output(48)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
     def test_test49_book_name_incorrect(self):
-        """Test 49: Test book name incorrect from test49.usfm."""
+        r"""Test 49: Test book name incorrect from test49.usfm from \ide marker."""
         actual = parse_and_render(49)
         expected = read_expected_output(49)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test50_various_markers(self):
+        r"""Test 50: Test various markers from test50.usfm from BSB, ENG_WEB, etc."""
+        actual = parse_and_render(50)
+        expected = read_expected_output(50)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
 
 class TestIntegrationWithFlags:
