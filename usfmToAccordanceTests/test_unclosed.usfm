@@ -1,0 +1,6 @@
+\id MAT
+\c 1
+\v 1 This verse has an \add unclosed translator addition without closing tag.
+\v 2 This verse has \nd LORD\nd* properly closed.
+\v 3 This verse has \wj words of Jesus \nd with nested divine name but wj is never closed.
+\v 4 This verse is clean.

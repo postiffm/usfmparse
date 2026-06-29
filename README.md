@@ -30,6 +30,11 @@ Convert USFM files to Accordance format:
 ```bash
 python -m usfmtools.usfmToAccordance input.usfm > output.acc
 ```
+Check for unclosed markers
+
+```bash
+python3 usfmtools/usfmcheck.py usfmToAccordanceTests/test_unclosed.usfm
+```
 
 ### Multiple Files
 
