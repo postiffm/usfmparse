@@ -198,7 +198,8 @@ def _tokenize_word(word: str, line_num: int, filename: str) -> List[UsfmToken]:
         is_end_marker = match.group(2) == '*'  # True if marker ends with *
         
         # Check if marker is known (emit warning but continue processing)
-        if marker_name not in KNOWN_MARKERS and not marker_name.startswith('z') and not marker_name.startswith('+z'):
+        check_name = marker_name.lstrip('+')
+        if check_name not in KNOWN_MARKERS and not check_name.startswith('z'):
             # Emit warning for unknown marker but preserve content
             location = f" in {filename}" if filename else ""
             warning_msg = (

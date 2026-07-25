@@ -205,6 +205,19 @@ class TestUnknownMarkerWarnings:
         captured = capsys.readouterr()
         assert captured.err == ''
 
+    def test_nested_known_markers_no_warning(self, capsys):
+        """Test that nested known markers (like +fq) don't emit warnings"""
+        tokens = tokenize(r'\+fq \+fqa \+fr \+w')
+        captured = capsys.readouterr()
+        assert captured.err == ''
+
+    def test_nested_unknown_marker_warning(self, capsys):
+        """Test that nested unknown markers (like +invalid) emit warnings"""
+        tokens = tokenize(r'\+invalid')
+        captured = capsys.readouterr()
+        assert 'Warning: Unknown marker' in captured.err
+        assert 'invalid' in captured.err
+
 
 class TestLineNumberTracking:
     """Test line number tracking across multi-line input"""
