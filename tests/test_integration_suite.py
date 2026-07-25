@@ -370,6 +370,12 @@ class TestIntegrationSuite:
         actual = parse_and_render(50)
         expected = read_expected_output(50)
         assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+    def test_test51_various_markers(self):
+        r"""Test 51: Test \fq marker"""
+        actual = parse_and_render(51)
+        expected = read_expected_output(51)
+        assert actual == expected, f"Output mismatch:\nExpected: {expected!r}\nActual: {actual!r}"
+
 
 class TestIntegrationWithFlags:
     """Integration tests with different CLI flags."""
