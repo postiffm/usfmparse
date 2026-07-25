@@ -30,11 +30,6 @@ Convert USFM files to Accordance format:
 ```bash
 python -m usfmtools.usfmToAccordance input.usfm > output.acc
 ```
-Check for unclosed markers
-
-```bash
-python3 usfmtools/usfmcheck.py usfmToAccordanceTests/test_unclosed.usfm
-```
 
 ### Multiple Files
 
@@ -58,6 +53,12 @@ python -m usfmtools.usfmToAccordance --debug input.usfm > output.acc
 
 # Combine options
 python -m usfmtools.usfmToAccordance --no-para --no-tc input.usfm > output.acc
+```
+
+Check for unclosed markers
+
+```bash
+python3 usfmtools/usfmcheck.py usfmToAccordanceTests/test_unclosed.usfm
 ```
 
 ## Programmatic Usage
@@ -403,7 +404,7 @@ The previous fix for test45 and 46 added a \n to the output. This caused some of
 ### Bug 24
 test47.usfm has two \+rq markers, ach followed by a \+rq* closing marker. These happen to be nested inside a \qt and \qt* pair, but that is not important in this case. The point is that the parser is emitting "Unkown Unknown" for the \+rq markers. Furthermore, it is output the contents of the \+rq which is not what the AccordanceWalker is designed to do.
 
-## Bug 25
+### Bug 25
 A number of times I have seen strange output from pytest that indicates there are some warnings, perhaps on stderr, that I have not been aware of. I need to know that those errors and warnings are reported and observed by the test harness. 
 
 ### Bug 26 
@@ -433,5 +434,8 @@ test50.usfm fails because of many new markers that the lexer/parser is not suppo
 ### Bug 30
 I have modified usfmtools/usfmwalker.py so that instead of putting a regular space character between quotation characters in the case of separate_quotes = True, I made it a Unicode 202f, narrow no-break space. I modified usfmToAccordanceTests/test25.acc to reflect this change, but now the test fails. It appears that the usfmwalker.py outputs one narrow space instead of two in the context of a " ' " sequence of closing quotations marks. Can you  figure out the bug?
 
+### Bug 31 
+test51.usfm shows that the \fq marker was not supported at some point. I think it has been fixed since, but Dagaare uncovered this in Leviticus.
+
 # To Do
-I need to write a program to walk and check for unclosed markers.
+I need to write a program to walk and check for unclosed markers. John Hamilton did this for us. See 
